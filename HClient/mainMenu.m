@@ -220,4 +220,20 @@
     [self.tableView reloadData];
 }
 
+- (IBAction)Action:(id)sender {
+    UIAlertController *sheet = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    UIAlertAction *open = [UIAlertAction actionWithTitle:NSLocalizedString(@"Open in Safari",nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        if (@available(iOS 9.0, *)) {
+            SFSafariViewController *safari = [[SFSafariViewController alloc]initWithURL:[NSURL URLWithString:@"https://hitomi.la/"]];
+            [self presentViewController:safari animated:YES completion:nil];
+        }
+        else
+            [[UIApplication sharedApplication]openURL:[NSURL URLWithString:@"https://hitomi.la/"]];
+        }];
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel",nil) style:UIAlertActionStyleCancel handler:nil];
+    [sheet addAction:open];
+    [sheet addAction:cancel];
+    [self presentViewController:sheet animated:YES completion:nil];
+}
+
 @end

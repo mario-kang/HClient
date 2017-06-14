@@ -235,4 +235,27 @@
     [self.tableView reloadData];
 }
 
+- (IBAction)Action:(id)sender {
+    NSMutableString *taga = [NSMutableString stringWithString:tag];
+    [taga replaceOccurrencesOfString:@" " withString:@"%20" options:(NSStringCompareOptions)nil range:NSMakeRange(0, [taga length])];
+    NSURL *url;
+    if ([type isEqualToString:@"male"] || [type isEqualToString:@"female"])
+        url = [NSURL URLWithString:[NSString stringWithFormat:@"https://hitomi.la/tag/%@:%@-all-1.html",type,taga]];
+    else
+        url = [NSURL URLWithString:[NSString stringWithFormat:@"https://hitomi.la/%@/%@-all-1.html",type,taga]];
+    UIAlertController *sheet = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    UIAlertAction *open = [UIAlertAction actionWithTitle:NSLocalizedString(@"Open in Safari",nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        if (@available(iOS 9.0, *)) {
+            SFSafariViewController *safari = [[SFSafariViewController alloc]initWithURL:url];
+            [self presentViewController:safari animated:YES completion:nil];
+        }
+        else
+            [[UIApplication sharedApplication]openURL:url];
+    }];
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel",nil) style:UIAlertActionStyleCancel handler:nil];
+    [sheet addAction:open];
+    [sheet addAction:cancel];
+    [self presentViewController:sheet animated:YES completion:nil];
+}
+
 @end

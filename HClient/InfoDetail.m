@@ -127,6 +127,14 @@
     NSUserDefaults *favorites = [NSUserDefaults standardUserDefaults];
     NSMutableArray *favoriteslist = [NSMutableArray arrayWithArray:[favorites arrayForKey:@"favorites"]];
     UIAlertController *sheet = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    UIAlertAction *open = [UIAlertAction actionWithTitle:NSLocalizedString(@"Open in Safari",nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        if (@available(iOS 9.0, *)) {
+            SFSafariViewController *safari = [[SFSafariViewController alloc]initWithURL:[NSURL URLWithString:URL]];
+            [self presentViewController:safari animated:YES completion:nil];
+        }
+        else
+            [[UIApplication sharedApplication]openURL:[NSURL URLWithString:URL]];
+    }];
     UIAlertAction *bookmark;
     if (![favoriteslist containsObject:URL])
         bookmark = [UIAlertAction actionWithTitle:NSLocalizedString(@"Add to favorites",nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -141,6 +149,7 @@
             [favorites synchronize];
         }];
     UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel",nil) style:UIAlertActionStyleCancel handler:nil];
+    [sheet addAction:open];
     [sheet addAction:bookmark];
     [sheet addAction:cancel];
     [self presentViewController:sheet animated:YES completion:nil];

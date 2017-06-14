@@ -56,4 +56,36 @@
     [task1 resume];
 }
 
+-(void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation {
+    [[UIApplication sharedApplication]setNetworkActivityIndicatorVisible:YES];
+}
+
+-(void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
+    [[UIApplication sharedApplication]setNetworkActivityIndicatorVisible:NO];
+}
+
+-(void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error {
+    [[UIApplication sharedApplication]setNetworkActivityIndicatorVisible:NO];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Error Occured.",nil) message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *action = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:nil];
+    [alert addAction:action];
+}
+
+- (IBAction)Action:(id)sender {
+    UIAlertController *sheet = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    UIAlertAction *open = [UIAlertAction actionWithTitle:NSLocalizedString(@"Open in Safari",nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        NSString *ViewerURL = [NSString stringWithFormat:@"https://hitomi.la%@",URL];
+        if (@available(iOS 9.0, *)) {
+            SFSafariViewController *safari = [[SFSafariViewController alloc]initWithURL:[NSURL URLWithString:ViewerURL]];
+            [self presentViewController:safari animated:YES completion:nil];
+        }
+        else
+            [[UIApplication sharedApplication]openURL:[NSURL URLWithString:ViewerURL]];
+    }];
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel",nil) style:UIAlertActionStyleCancel handler:nil];
+    [sheet addAction:open];
+    [sheet addAction:cancel];
+    [self presentViewController:sheet animated:YES completion:nil];
+}
+
 @end

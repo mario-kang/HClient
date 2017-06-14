@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <SafariServices/SafariServices.h>
 #import "String.h"
 #import "InfoDetail.h"
 
