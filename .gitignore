@@ -6,6 +6,9 @@
 build/
 DerivedData/
 
+.*
+!.gitignore
+
 ## Various settings
 *.pbxuser
 !default.pbxuser

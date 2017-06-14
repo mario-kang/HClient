@@ -1,0 +1,44 @@
+/* 
+  Localizable.strings
+  HClient
+
+  Created by 강희찬 on 2017. 6. 12..
+  Copyright © 2017년 mario-kang. All rights reserved.
+*/
+"Error Occured." = "에러가 발생했습니다.";
+
+"Tag, %d item(s)" = "태그, %d개의 항목";
+
+"Artist, %d item(s)" = "아티스트, %d개의 항목";
+
+"Female, %d item(s)" = "여성, %d개의 항목";
+
+"Male, %d item(s)" = "남성, %d개의 항목";
+
+"Series, %d item(s)" = "원작, %d개의 항목";
+
+"Group, %d item(s)" = "그룹, %d개의 항목";
+
+"Character, %d item(s)" = "캐릭터, %d개의 항목";
+
+"Artist: " = "아티스트: ";
+
+"Language: " = "언어: ";
+
+"Series: " = "원작: ";
+
+"Tags: " = "태그: ";
+
+"Add to favorites" = "즐겨찾기에 추가";
+
+"Remove from favorites" = "즐겨찾기에서 제거";
+
+"Cancel" = "취소";
+
+"OK" = "확인";
+
+"New" = "새 항목";
+
+"Search" = "검색";
+
+"Favorites" = "즐겨찾기";

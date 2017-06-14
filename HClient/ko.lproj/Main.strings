@@ -1,0 +1,96 @@
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "00D-Lk-AbT"; */
+"00D-Lk-AbT.text" = "";
+
+/* Class = "UILabel"; text = "Detail"; ObjectID = "1cd-m4-yhG"; */
+"1cd-m4-yhG.text" = "";
+
+/* Class = "UILabel"; text = "Main Page"; ObjectID = "6mh-z3-n09"; */
+"6mh-z3-n09.text" = "메인 페이지";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "7fI-vC-8hR"; */
+"7fI-vC-8hR.text" = "";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "AT2-wr-z9f"; */
+"AT2-wr-z9f.text" = "";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "DHR-Fl-ejw"; */
+"DHR-Fl-ejw.text" = "";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "Ev6-tv-sPJ"; */
+"Ev6-tv-sPJ.text" = "";
+
+/* Class = "UISearchBar"; placeholder = "Search Tags"; ObjectID = "FIa-7N-FkC"; */
+"FIa-7N-FkC.placeholder" = "태그 검색";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "H4e-Ku-xHD"; */
+"H4e-Ku-xHD.text" = "";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "HDN-SY-BZf"; */
+"HDN-SY-BZf.text" = "";
+
+/* Class = "UINavigationItem"; title = "Search"; ObjectID = "IPA-q0-K2a"; */
+"IPA-q0-K2a.title" = "검색";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "JpN-T0-gCg"; */
+"JpN-T0-gCg.text" = "";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "L6m-nF-Qii"; */
+"L6m-nF-Qii.text" = "";
+
+/* Class = "UINavigationItem"; title = "Title"; ObjectID = "NYL-jV-6zZ"; */
+"NYL-jV-6zZ.title" = "";
+
+/* Class = "UILabel"; text = "Search"; ObjectID = "OAo-HZ-1oa"; */
+"OAo-HZ-1oa.text" = "검색";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "PDa-7L-KgY"; */
+"PDa-7L-KgY.text" = "";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "UQo-wH-1vr"; */
+"UQo-wH-1vr.text" = "";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "WA5-yE-SMw"; */
+"WA5-yE-SMw.text" = "";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "a5G-QU-Qeu"; */
+"a5G-QU-Qeu.text" = "";
+
+/* Class = "UINavigationItem"; title = "HClient"; ObjectID = "aPk-pV-fgP"; */
+"aPk-pV-fgP.title" = "HClient";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "cLn-LQ-yYC"; */
+"cLn-LQ-yYC.text" = "";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "eCI-gD-Hk2"; */
+"eCI-gD-Hk2.text" = "";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "fw5-mm-IaY"; */
+"fw5-mm-IaY.text" = "";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "hBA-m7-KCR"; */
+"hBA-m7-KCR.text" = "";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "hwv-2K-LPn"; */
+"hwv-2K-LPn.text" = "";
+
+/* Class = "UINavigationItem"; title = "Favorites"; ObjectID = "kdl-zc-x96"; */
+"kdl-zc-x96.title" = "즐겨찾기";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "pTC-en-sT0"; */
+"pTC-en-sT0.text" = "";
+
+/* Class = "UINavigationItem"; title = "Search"; ObjectID = "qP9-Hf-eZ1"; */
+"qP9-Hf-eZ1.title" = "검색";
+
+/* Class = "UINavigationItem"; title = "Menu"; ObjectID = "sMs-d6-qM9"; */
+"sMs-d6-qM9.title" = "메뉴";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "vPP-Ui-8Dk"; */
+"vPP-Ui-8Dk.text" = "";
+
+/* Class = "UILabel"; text = "Favorites"; ObjectID = "xAo-ug-v8C"; */
+"xAo-ug-v8C.text" = "즐겨찾기";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "yxp-4a-uw5"; */
+"yxp-4a-uw5.text" = "";
