@@ -28,6 +28,7 @@
 @property (strong) NSArray *groupList1;
 @property (strong) NSArray *characterList1;
 @property (strong) UIActivityIndicatorView *activityController;
+@property (strong) NSString *searchWord;
 
 @property bool Active;
 @property bool tags;

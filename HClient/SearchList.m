@@ -30,6 +30,7 @@
 @synthesize seriesList1;
 @synthesize groupList1;
 @synthesize characterList1;
+@synthesize searchWord;
 
 @synthesize Active;
 @synthesize tags;
@@ -105,6 +106,7 @@
 
 -(void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
     NSPredicate *predicate;
+    searchWord = searchText;
     tagList1 = [[NSArray alloc]init];
     artistList1 = [[NSArray alloc]init];
     maleList1 = [[NSArray alloc]init];
@@ -168,55 +170,72 @@
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
+    return 2;
+}
+
+-(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    if (section == 0)
+        return NSLocalizedString(@"Hitomi Tags", nil);
+    else
+        return NSLocalizedString(@"Hitomi Number", nil);
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (tagList1 == nil)
         return 0;
-    else
+    else if (section == 0)
         return tagList1.count+artistList1.count+maleList1.count+femaleList1.count+seriesList1.count+groupList1.count+characterList1.count;
+    else
+        return 1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSString *a;
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"list" forIndexPath:indexPath];
-    if (indexPath.row < tagList1.count) {
-        [cell.textLabel setText:[[tagList1 objectAtIndex:indexPath.row]objectForKey:@"s"]];
-        a = [NSString stringWithFormat:NSLocalizedString(@"Tag, %d item(s)", nil), [[[tagList1 objectAtIndex:indexPath.row]objectForKey:@"t"]intValue]];
-        [cell.detailTextLabel setText:a];
-    }
-    else if (indexPath.row - tagList1.count < artistList1.count) {
-        [cell.textLabel setText:[[artistList1 objectAtIndex:indexPath.row-tagList1.count]objectForKey:@"s"]];
-        a = [NSString stringWithFormat:NSLocalizedString(@"Artist, %d item(s)", nil), [[[artistList1 objectAtIndex:indexPath.row-tagList1.count]objectForKey:@"t"]intValue]];
-        [cell.detailTextLabel setText:a];
-    }
-    else if (indexPath.row - tagList1.count - artistList1.count < maleList1.count) {
-        [cell.textLabel setText:[[maleList1 objectAtIndex:indexPath.row - tagList1.count - artistList1.count]objectForKey:@"s"]];
-        a = [NSString stringWithFormat:NSLocalizedString(@"Male, %d item(s)", nil), [[[maleList1 objectAtIndex:indexPath.row - tagList1.count - artistList1.count]objectForKey:@"t"]intValue]];
-        [cell.detailTextLabel setText:a];
-    }
-    else if (indexPath.row - tagList1.count - artistList1.count - maleList1.count < femaleList1.count) {
-        [cell.textLabel setText:[[femaleList1 objectAtIndex:indexPath.row - tagList1.count - artistList1.count - maleList1.count]objectForKey:@"s"]];
-        a = [NSString stringWithFormat:NSLocalizedString(@"Female, %d item(s)", nil), [[[femaleList1 objectAtIndex:indexPath.row - tagList1.count - artistList1.count - maleList1.count]objectForKey:@"t"]intValue]];
-        [cell.detailTextLabel setText:a];
-    }
-    else if (indexPath.row - tagList1.count - artistList1.count - maleList1.count - femaleList1.count < seriesList1.count) {
-        [cell.textLabel setText:[[seriesList1 objectAtIndex:indexPath.row - tagList1.count - artistList1.count - maleList1.count - femaleList1.count]objectForKey:@"s"]];
-        a = [NSString stringWithFormat:NSLocalizedString(@"Series, %d item(s)", nil), [[[seriesList1 objectAtIndex:indexPath.row - tagList1.count - artistList1.count - maleList1.count - femaleList1.count]objectForKey:@"t"]intValue]];
-        [cell.detailTextLabel setText:a];
-    }
-    else if (indexPath.row - tagList1.count - artistList1.count - maleList1.count - femaleList1.count - seriesList1.count < groupList1.count) {
-        [cell.textLabel setText:[[groupList1 objectAtIndex:indexPath.row - tagList1.count - artistList1.count - maleList1.count - femaleList1.count - seriesList1.count]objectForKey:@"s"]];
-        a = [NSString stringWithFormat:NSLocalizedString(@"Group, %d item(s)", nil), [[[groupList1 objectAtIndex:indexPath.row - tagList1.count - artistList1.count - maleList1.count - femaleList1.count - seriesList1.count]objectForKey:@"t"]intValue]];
-        [cell.detailTextLabel setText:a];
+    if (indexPath.section == 0) {
+        NSString *a;
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"list" forIndexPath:indexPath];
+        if (indexPath.row < tagList1.count) {
+            [cell.textLabel setText:[[tagList1 objectAtIndex:indexPath.row]objectForKey:@"s"]];
+            a = [NSString stringWithFormat:NSLocalizedString(@"Tag, %d item(s)", nil), [[[tagList1 objectAtIndex:indexPath.row]objectForKey:@"t"]intValue]];
+            [cell.detailTextLabel setText:a];
+        }
+        else if (indexPath.row - tagList1.count < artistList1.count) {
+            [cell.textLabel setText:[[artistList1 objectAtIndex:indexPath.row-tagList1.count]objectForKey:@"s"]];
+            a = [NSString stringWithFormat:NSLocalizedString(@"Artist, %d item(s)", nil), [[[artistList1 objectAtIndex:indexPath.row-tagList1.count]objectForKey:@"t"]intValue]];
+            [cell.detailTextLabel setText:a];
+        }
+        else if (indexPath.row - tagList1.count - artistList1.count < maleList1.count) {
+            [cell.textLabel setText:[[maleList1 objectAtIndex:indexPath.row - tagList1.count - artistList1.count]objectForKey:@"s"]];
+            a = [NSString stringWithFormat:NSLocalizedString(@"Male, %d item(s)", nil), [[[maleList1 objectAtIndex:indexPath.row - tagList1.count - artistList1.count]objectForKey:@"t"]intValue]];
+            [cell.detailTextLabel setText:a];
+        }
+        else if (indexPath.row - tagList1.count - artistList1.count - maleList1.count < femaleList1.count) {
+            [cell.textLabel setText:[[femaleList1 objectAtIndex:indexPath.row - tagList1.count - artistList1.count - maleList1.count]objectForKey:@"s"]];
+            a = [NSString stringWithFormat:NSLocalizedString(@"Female, %d item(s)", nil), [[[femaleList1 objectAtIndex:indexPath.row - tagList1.count - artistList1.count - maleList1.count]objectForKey:@"t"]intValue]];
+            [cell.detailTextLabel setText:a];
+        }
+        else if (indexPath.row - tagList1.count - artistList1.count - maleList1.count - femaleList1.count < seriesList1.count) {
+            [cell.textLabel setText:[[seriesList1 objectAtIndex:indexPath.row - tagList1.count - artistList1.count - maleList1.count - femaleList1.count]objectForKey:@"s"]];
+            a = [NSString stringWithFormat:NSLocalizedString(@"Series, %d item(s)", nil), [[[seriesList1 objectAtIndex:indexPath.row - tagList1.count - artistList1.count - maleList1.count - femaleList1.count]objectForKey:@"t"]intValue]];
+            [cell.detailTextLabel setText:a];
+        }
+        else if (indexPath.row - tagList1.count - artistList1.count - maleList1.count - femaleList1.count - seriesList1.count < groupList1.count) {
+            [cell.textLabel setText:[[groupList1 objectAtIndex:indexPath.row - tagList1.count - artistList1.count - maleList1.count - femaleList1.count - seriesList1.count]objectForKey:@"s"]];
+            a = [NSString stringWithFormat:NSLocalizedString(@"Group, %d item(s)", nil), [[[groupList1 objectAtIndex:indexPath.row - tagList1.count - artistList1.count - maleList1.count - femaleList1.count - seriesList1.count]objectForKey:@"t"]intValue]];
+            [cell.detailTextLabel setText:a];
+        }
+        else {
+            [cell.textLabel setText:[[characterList1 objectAtIndex:indexPath.row - tagList1.count - artistList1.count - maleList1.count - femaleList1.count - seriesList1.count - groupList1.count]objectForKey:@"s"]];
+            a = [NSString stringWithFormat:NSLocalizedString(@"Character, %d item(s)", nil), [[[characterList1 objectAtIndex:indexPath.row - tagList1.count - artistList1.count - maleList1.count - femaleList1.count - seriesList1.count - groupList1.count]objectForKey:@"t"]intValue]];
+            [cell.detailTextLabel setText:a];
+        }
+        return cell;
     }
     else {
-        [cell.textLabel setText:[[characterList1 objectAtIndex:indexPath.row - tagList1.count - artistList1.count - maleList1.count - femaleList1.count - seriesList1.count - groupList1.count]objectForKey:@"s"]];
-        a = [NSString stringWithFormat:NSLocalizedString(@"Character, %d item(s)", nil), [[[characterList1 objectAtIndex:indexPath.row - tagList1.count - artistList1.count - maleList1.count - femaleList1.count - seriesList1.count - groupList1.count]objectForKey:@"t"]intValue]];
-        [cell.detailTextLabel setText:a];
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"number" forIndexPath:indexPath];
+        NSInteger hitomiNumber = [searchWord integerValue];
+        [cell.textLabel setText:[NSString stringWithFormat:NSLocalizedString(@"Find Hitomi number %ld", nil),(long)hitomiNumber]];
+        return cell;
     }
-    return cell;
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -251,7 +270,12 @@
             segued.tag = [[characterList1 objectAtIndex:indexPath.row - tagList1.count - artistList1.count - maleList1.count - femaleList1.count - seriesList1.count - groupList1.count]objectForKey:@"s"];
             segued.type = @"character";
         }
-        
+        segued.numbered = NO;
+    }
+    else {
+        SearchView *segued = segue.destinationViewController;
+        segued.hitomiNumber = searchWord;
+        segued.numbered = YES;
     }
 }
 

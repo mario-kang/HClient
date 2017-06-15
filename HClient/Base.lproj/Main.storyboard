@@ -268,6 +268,26 @@
                                     <segue destination="ISy-Mj-pTL" kind="show" identifier="search" id="V1T-MU-Gwq"/>
                                 </connections>
                             </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="number" textLabel="Bna-sS-TpL" style="IBUITableViewCellStyleDefault" id="eeS-jr-JPt">
+                                <rect key="frame" x="0.0" y="143.5" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="eeS-jr-JPt" id="mdW-Q9-ge8">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Bna-sS-TpL">
+                                            <rect key="frame" x="16" y="0.0" width="289" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <segue destination="ISy-Mj-pTL" kind="show" identifier="number" id="48L-AU-9e7"/>
+                                </connections>
+                            </tableViewCell>
                         </prototypes>
                         <connections>
                             <outlet property="dataSource" destination="XPz-Mq-yRT" id="Q7P-hI-hGs"/>
@@ -786,6 +806,7 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="1DM-ec-3as"/>
+        <segue reference="48L-AU-9e7"/>
         <segue reference="gQP-lg-uS2"/>
     </inferredMetricsTieBreakers>
 </document>
