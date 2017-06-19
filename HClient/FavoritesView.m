@@ -61,7 +61,8 @@
         dispatch_group_async(loopForGroup, queue, ^{
             NSURL *url = [NSURL URLWithString:[favoriteslist objectAtIndex:a]];
             NSURLSession *session = [NSURLSession sharedSession];
-            NSURLSessionTask *task = [session dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+            NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0f];
+            NSURLSessionTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
                 if (error == nil) {
                     NSMutableString *str = [[NSMutableString alloc]initWithData:data encoding:NSUTF8StringEncoding];
                     NSString *title1 = [[str componentsSeparatedByString:@"</a></h1>"]objectAtIndex:0];
@@ -108,7 +109,8 @@
                     NSString *pic = [[[[str componentsSeparatedByString:@".html\"><img src=\""]objectAtIndex:1]componentsSeparatedByString:@"\"></a></div>"]objectAtIndex:0];
                     NSString *picurl = [NSString stringWithFormat:@"https:%@", pic];
                     NSURLSession *session = [NSURLSession sharedSession];
-                    NSURLSessionDataTask *sessionTask = [session dataTaskWithURL:[NSURL URLWithString:picurl] completionHandler:^(NSData * _Nullable data2, NSURLResponse * _Nullable response2, NSError * _Nullable error2) {
+                    NSURLRequest *request1 = [NSURLRequest requestWithURL:[NSURL URLWithString:picurl] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0f];
+                    NSURLSessionDataTask *sessionTask = [session dataTaskWithRequest:request1 completionHandler:^(NSData * _Nullable data2, NSURLResponse * _Nullable response2, NSError * _Nullable error2) {
                         if (error2 == nil) {
                             [arr replaceObjectAtIndex:a withObject:data2];
                             NSMutableDictionary *dic = [[NSMutableDictionary alloc]init];

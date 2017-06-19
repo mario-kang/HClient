@@ -165,7 +165,8 @@
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://hitomi.la/index-all-%lu.html",(unsigned long)ind]];
     [[UIApplication sharedApplication]setNetworkActivityIndicatorVisible:YES];
     NSURLSession *session1 = [NSURLSession sharedSession];
-    NSURLSessionTask *task1 = [session1 dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+    NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0f];
+    NSURLSessionTask *task1 = [session1 dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         if (error == nil) {
             NSMutableString *str = [[NSMutableString alloc]initWithData:data encoding:NSUTF8StringEncoding];
             str = [String replacingOccurrences:str];
@@ -183,7 +184,8 @@
                     NSString *imga = [[img componentsSeparatedByString:@"<img src=\""]objectAtIndex:1];
                     NSString *urlString = [NSString stringWithFormat:@"https:%@",imga];
                     NSURLSession *session = [NSURLSession sharedSession];
-                    NSURLSessionDataTask *sessionTask = [session dataTaskWithURL:[NSURL URLWithString:urlString] completionHandler:^(NSData * _Nullable data2, NSURLResponse * _Nullable response2, NSError * _Nullable error2) {
+                    NSURLRequest *request1 = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0f];
+                    NSURLSessionDataTask *sessionTask = [session dataTaskWithRequest:request1 completionHandler:^(NSData * _Nullable data2, NSURLResponse * _Nullable response2, NSError * _Nullable error2) {
                         if (error2 == nil) {
                             [arr2 replaceObjectAtIndex:arr2.count-temp.count+i withObject:data2];
                             dispatch_async(dispatch_get_main_queue(), ^{

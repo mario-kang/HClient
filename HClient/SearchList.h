@@ -20,6 +20,7 @@
 @property (strong) NSArray *seriesList;
 @property (strong) NSArray *groupList;
 @property (strong) NSArray *characterList;
+@property (strong) NSArray *languageList;
 @property (strong) NSArray *tagList1;
 @property (strong) NSArray *artistList1;
 @property (strong) NSArray *maleList1;
@@ -27,6 +28,7 @@
 @property (strong) NSArray *seriesList1;
 @property (strong) NSArray *groupList1;
 @property (strong) NSArray *characterList1;
+@property (strong) NSArray *languageList1;
 @property (strong) UIActivityIndicatorView *activityController;
 @property (strong) NSString *searchWord;
 

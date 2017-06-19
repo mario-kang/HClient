@@ -21,7 +21,7 @@
 "Ev6-tv-sPJ.text" = "";
 
 /* Class = "UISearchBar"; placeholder = "Search Tags"; ObjectID = "FIa-7N-FkC"; */
-"FIa-7N-FkC.placeholder" = "태그 검색";
+"FIa-7N-FkC.placeholder" = "태그 및 넘버 검색";
 
 /* Class = "UILabel"; text = "Label"; ObjectID = "H4e-Ku-xHD"; */
 "H4e-Ku-xHD.text" = "";

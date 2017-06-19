@@ -23,6 +23,7 @@
 @synthesize seriesList;
 @synthesize groupList;
 @synthesize characterList;
+@synthesize languageList;
 @synthesize tagList1;
 @synthesize artistList1;
 @synthesize maleList1;
@@ -30,6 +31,7 @@
 @synthesize seriesList1;
 @synthesize groupList1;
 @synthesize characterList1;
+@synthesize languageList1;
 @synthesize searchWord;
 
 @synthesize Active;
@@ -52,9 +54,10 @@
     Active = NO;
     [Search setUserInteractionEnabled:NO];
     NSURL *URL = [NSURL URLWithString:urlString];
+    NSURLRequest *request = [NSURLRequest requestWithURL:URL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0f];
     NSURLSession *Session = [NSURLSession sharedSession];
     [[UIApplication sharedApplication]setNetworkActivityIndicatorVisible:YES];
-    NSURLSessionTask *sessionTask = [Session dataTaskWithURL:URL completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+    NSURLSessionTask *sessionTask = [Session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         if (error == nil) {
             NSDictionary *JSONList = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
             tagList = [JSONList objectForKey:@"tag"];
@@ -64,6 +67,7 @@
             seriesList = [JSONList objectForKey:@"series"];
             groupList = [JSONList objectForKey:@"group"];
             characterList = [JSONList objectForKey:@"character"];
+            languageList = [JSONList objectForKey:@"language"];
             dispatch_async(dispatch_get_main_queue(), ^{
                 [Search setUserInteractionEnabled:YES];
                 activityController.hidden = YES;
@@ -114,6 +118,7 @@
     seriesList1 = [[NSArray alloc]init];
     groupList1 = [[NSArray alloc]init];
     characterList1 = [[NSArray alloc]init];
+    languageList1 = [[NSArray alloc]init];
     if ([[searchText lowercaseString] hasPrefix:@"tag:"]) {
         if (![[searchText lowercaseString] isEqualToString:@"tag:"]) {
             predicate = [NSPredicate predicateWithFormat:@"s CONTAINS %@",[[searchText lowercaseString]substringFromIndex:4]];
@@ -156,6 +161,12 @@
             characterList1 = [characterList filteredArrayUsingPredicate:predicate];
         }
     }
+    else if ([[searchText lowercaseString] hasPrefix:@"language:"]) {
+        if (![[searchText lowercaseString] isEqualToString:@"language:"]) {
+            predicate = [NSPredicate predicateWithFormat:@"s CONTAINS %@",[[searchText lowercaseString]substringFromIndex:10]];
+            languageList1 = [languageList filteredArrayUsingPredicate:predicate];
+        }
+    }
     else {
         predicate = [NSPredicate predicateWithFormat:@"s CONTAINS %@",[searchText lowercaseString]];
         tagList1 = [tagList filteredArrayUsingPredicate:predicate];
@@ -165,6 +176,7 @@
         seriesList1 = [seriesList filteredArrayUsingPredicate:predicate];
         groupList1 = [groupList filteredArrayUsingPredicate:predicate];
         characterList1 = [characterList filteredArrayUsingPredicate:predicate];
+        languageList1 = [languageList filteredArrayUsingPredicate:predicate];
     }
     [self.tableView reloadData];
 }
@@ -184,7 +196,7 @@
     if (tagList1 == nil)
         return 0;
     else if (section == 0)
-        return tagList1.count+artistList1.count+maleList1.count+femaleList1.count+seriesList1.count+groupList1.count+characterList1.count;
+        return tagList1.count+artistList1.count+maleList1.count+femaleList1.count+seriesList1.count+groupList1.count+characterList1.count+languageList1.count;
     else
         return 1;
 }
@@ -223,9 +235,14 @@
             a = [NSString stringWithFormat:NSLocalizedString(@"Group, %d item(s)", nil), [[[groupList1 objectAtIndex:indexPath.row - tagList1.count - artistList1.count - maleList1.count - femaleList1.count - seriesList1.count]objectForKey:@"t"]intValue]];
             [cell.detailTextLabel setText:a];
         }
-        else {
+        else if (indexPath.row - tagList1.count - artistList1.count - maleList1.count - femaleList1.count - seriesList1.count - groupList1.count < characterList1.count) {
             [cell.textLabel setText:[[characterList1 objectAtIndex:indexPath.row - tagList1.count - artistList1.count - maleList1.count - femaleList1.count - seriesList1.count - groupList1.count]objectForKey:@"s"]];
             a = [NSString stringWithFormat:NSLocalizedString(@"Character, %d item(s)", nil), [[[characterList1 objectAtIndex:indexPath.row - tagList1.count - artistList1.count - maleList1.count - femaleList1.count - seriesList1.count - groupList1.count]objectForKey:@"t"]intValue]];
+            [cell.detailTextLabel setText:a];
+        }
+        else {
+            [cell.textLabel setText:[[languageList1 objectAtIndex:indexPath.row - tagList1.count - artistList1.count - maleList1.count - femaleList1.count - seriesList1.count - groupList1.count - characterList1.count]objectForKey:@"s"]];
+            a = [NSString stringWithFormat:NSLocalizedString(@"Language, %d item(s)", nil), [[[languageList1 objectAtIndex:indexPath.row - tagList1.count - artistList1.count - maleList1.count - femaleList1.count - seriesList1.count - groupList1.count - characterList1.count]objectForKey:@"t"]intValue]];
             [cell.detailTextLabel setText:a];
         }
         return cell;
@@ -266,9 +283,13 @@
             segued.tag = [[groupList1 objectAtIndex:indexPath.row - tagList1.count - artistList1.count - maleList1.count - femaleList1.count - seriesList1.count]objectForKey:@"s"];
             segued.type = @"group";
         }
-        else {
+        else if (indexPath.row - tagList1.count - artistList1.count - maleList1.count - femaleList1.count - seriesList1.count - groupList1.count < characterList1.count) {
             segued.tag = [[characterList1 objectAtIndex:indexPath.row - tagList1.count - artistList1.count - maleList1.count - femaleList1.count - seriesList1.count - groupList1.count]objectForKey:@"s"];
             segued.type = @"character";
+        }
+        else {
+            segued.tag = [[languageList1 objectAtIndex:indexPath.row - tagList1.count - artistList1.count - maleList1.count - femaleList1.count - seriesList1.count - groupList1.count - characterList1.count]objectForKey:@"s"];
+            segued.type = @"language";
         }
         segued.numbered = NO;
     }
