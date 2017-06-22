@@ -249,10 +249,12 @@
             });
         }
         else if (error == nil && [(NSHTTPURLResponse *)response statusCode] != 200) {
-            activityController.hidden = YES;
-            [activityController stopAnimating];
-            [overlay removeFromSuperview];
-            pages = YES;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                activityController.hidden = YES;
+                [activityController stopAnimating];
+                [overlay removeFromSuperview];
+                pages = YES;
+            });
         }
         else {
             [[NSOperationQueue mainQueue]addOperationWithBlock:^{

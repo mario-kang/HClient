@@ -7,19 +7,7 @@
 */
 "Error Occured." = "에러가 발생했습니다.";
 
-"Tag, %d item(s)" = "태그, %d개의 항목";
-
-"Artist, %d item(s)" = "아티스트, %d개의 항목";
-
-"Female, %d item(s)" = "여성, %d개의 항목";
-
-"Male, %d item(s)" = "남성, %d개의 항목";
-
-"Series, %d item(s)" = "원작, %d개의 항목";
-
-"Group, %d item(s)" = "그룹, %d개의 항목";
-
-"Character, %d item(s)" = "캐릭터, %d개의 항목";
+"%@, %ld item(s)" = "%@, %ld개의 항목";
 
 "Artist: " = "아티스트: ";
 
@@ -58,5 +46,3 @@
 "This number is Anime." = "이 넘버는 애니입니다.";
 
 "HClient does not support Anime." = "HClient는 애니를 지원하지 않습니다.";
-
-"Language, %d item(s)" = "언어, %d개의 항목";
