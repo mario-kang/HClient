@@ -1,0 +1,50 @@
+/* 
+  Localizable.strings
+  HClient
+
+  Created by 강희찬 on 2017. 6. 12..
+  Copyright © 2017년 mario-kang. All rights reserved.
+*/
+"Error Occured." = "發生了錯誤。";
+
+"%@, %ld item(s)" = "%@，%ld個項目";
+
+"Artist: " = "藝人：";
+
+"Language: " = "語言：";
+
+"Series: " = "系列：";
+
+"Tags: " = "標籤：";
+
+"Add to favorites" = "添加到書簽";
+
+"Remove from favorites" = "從書簽中刪除";
+
+"Cancel" = "取消";
+
+"OK" = "確定";
+
+"New" = "新項目";
+
+"Search" = "搜尋";
+
+"Favorites" = "書簽";
+
+"Open in Safari" = "在Safari打開";
+
+"Find Hitomi number %ld" = "搜尋Hitomi號碼%ld";
+
+"Hitomi Tags" = "Hitomi標籤";
+
+"Hitomi Number" = "Hitomi號碼";
+
+"Could not find number %ld." = "找不到Hitomi號碼%ld。";
+
+"Hitomi number %ld" = "Hitomi號碼%ld";
+
+"This number is Anime." = "這個號碼包含動漫。";
+
+"HClient does not support Anime." = "HClient不支持動漫。";
+
+"Share URL" = "共享URL";

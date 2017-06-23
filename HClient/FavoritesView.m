@@ -34,13 +34,14 @@
 @synthesize favoritesdata;
 @synthesize arr;
 @synthesize djURL;
+@synthesize previewingContext;
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    UIView *overlay = [[UIView alloc]initWithFrame:[[self tableView]frame]];
+    UIView *overlay = [[UIView alloc]initWithFrame:self.splitViewController.view.frame];
     [overlay setBackgroundColor:[UIColor blackColor]];
     [overlay setAlpha:0.8f];
-    [self.view addSubview:overlay];
+    [self.splitViewController.view addSubview:overlay];
     [overlay addSubview:activityController];
     activityController.hidden = NO;
     [activityController startAnimating];
@@ -158,8 +159,14 @@
     self.clearsSelectionOnViewWillAppear = NO;
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
     activityController = [[UIActivityIndicatorView alloc]initWithFrame:CGRectMake(0, 0, 32, 32)];
-    [activityController setCenter:self.view.center];
+    [activityController setCenter:self.splitViewController.view.center];
     [activityController setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    bool isForceTouchAvailable = false;
+    if ([self.traitCollection respondsToSelector:@selector(forceTouchCapability)])
+        isForceTouchAvailable = self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable;
+    if (isForceTouchAvailable) {
+        self.previewingContext = [self registerForPreviewingWithDelegate:self sourceView:self.view];
+    }
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -216,6 +223,23 @@
         djURL = [favoriteslist objectAtIndex:path.row];
         segued.URL = djURL;
     }
+}
+
+-(UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location {
+    CGPoint cellPosition = [self.tableView convertPoint:location toView:self.view];
+    NSIndexPath *path = [self.tableView indexPathForRowAtPoint:cellPosition];
+    if (path) {
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        InfoDetail *segued = [storyboard instantiateViewControllerWithIdentifier:@"io.github.mario-kang.HClient.infodetail"];
+        djURL = [favoriteslist objectAtIndex:path.row];
+        segued.URL = djURL;
+        return segued;
+    }
+    return nil;
+}
+
+-(void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit {
+    [self.navigationController showViewController:viewControllerToCommit sender:nil];
 }
 
 @end

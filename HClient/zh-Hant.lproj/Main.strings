@@ -1,27 +1,30 @@
 
 /* Class = "UILabel"; text = "Main Page"; ObjectID = "6mh-z3-n09"; */
-"6mh-z3-n09.text" = "메인 페이지";
+"6mh-z3-n09.text" = "首頁";
 
-/* Class = "UISearchBar"; placeholder = "Search Tags"; ObjectID = "FIa-7N-FkC"; */
-"FIa-7N-FkC.placeholder" = "태그 및 넘버 검색";
+/* Class = "UILabel"; text = "Title"; ObjectID = "Bna-sS-TpL"; */
+"Bna-sS-TpL.text" = "題目";
+
+/* Class = "UISearchBar"; placeholder = "Search Tags or Number"; ObjectID = "FIa-7N-FkC"; */
+"FIa-7N-FkC.placeholder" = "搜尋標籤或號碼";
 
 /* Class = "UINavigationItem"; title = "Search"; ObjectID = "IPA-q0-K2a"; */
-"IPA-q0-K2a.title" = "검색";
+"IPA-q0-K2a.title" = "搜尋";
 
 /* Class = "UILabel"; text = "Search"; ObjectID = "OAo-HZ-1oa"; */
-"OAo-HZ-1oa.text" = "검색";
+"OAo-HZ-1oa.text" = "搜尋";
 
 /* Class = "UINavigationItem"; title = "HClient"; ObjectID = "aPk-pV-fgP"; */
 "aPk-pV-fgP.title" = "HClient";
 
 /* Class = "UINavigationItem"; title = "Favorites"; ObjectID = "kdl-zc-x96"; */
-"kdl-zc-x96.title" = "즐겨찾기";
+"kdl-zc-x96.title" = "書簽";
 
 /* Class = "UINavigationItem"; title = "Search"; ObjectID = "qP9-Hf-eZ1"; */
-"qP9-Hf-eZ1.title" = "검색";
+"qP9-Hf-eZ1.title" = "搜尋";
 
 /* Class = "UINavigationItem"; title = "Menu"; ObjectID = "sMs-d6-qM9"; */
-"sMs-d6-qM9.title" = "메뉴";
+"sMs-d6-qM9.title" = "菜單";
 
 /* Class = "UILabel"; text = "Favorites"; ObjectID = "xAo-ug-v8C"; */
-"xAo-ug-v8C.text" = "즐겨찾기";
+"xAo-ug-v8C.text" = "書簽";

@@ -37,10 +37,15 @@
 		AC42DF7A1EEBA4F500C5F72B /* mainMenu.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = mainMenu.m; sourceTree = "<group>"; };
 		AC42DF7C1EEBAD7600C5F72B /* String.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = String.h; sourceTree = "<group>"; };
 		AC42DF7D1EEBAD7600C5F72B /* String.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = String.m; sourceTree = "<group>"; };
+		AC4BC1251EFD90AB006B66DB /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = HClient/ja.lproj/Main.strings; sourceTree = "<group>"; };
+		AC4BC1271EFD90AC006B66DB /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = HClient/ja.lproj/Localizable.strings; sourceTree = "<group>"; };
+		AC4BC1281EFD950D006B66DB /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "HClient/zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
+		AC4BC12A1EFD950E006B66DB /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "HClient/zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		AC4BC12B1EFD9513006B66DB /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "HClient/zh-Hant.lproj/Main.strings"; sourceTree = "<group>"; };
+		AC4BC12D1EFD9514006B66DB /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "HClient/zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		ACA8308B1EEEE5D8000393EF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = HClient/Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		ACA8308D1EEEE5D8000393EF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = HClient/Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		ACA830931EEEE5E7000393EF /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = HClient/ko.lproj/Localizable.strings; sourceTree = "<group>"; };
-		ACA830991EEEE604000393EF /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = HClient/ko.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		ACA8309A1EEEE60F000393EF /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = HClient/ko.lproj/Main.strings; sourceTree = "<group>"; };
 		ACF507341EF1A0AA00D2608F /* Image.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Image.xcassets; sourceTree = "<group>"; };
 		ACF507361EF1A1F300D2608F /* FavoritesView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FavoritesView.h; sourceTree = "<group>"; };
@@ -149,6 +154,9 @@
 				en,
 				Base,
 				ko,
+				ja,
+				"zh-Hans",
+				"zh-Hant",
 			);
 			mainGroup = AC42DF571EEBA2C300C5F72B;
 			productRefGroup = AC42DF611EEBA2C300C5F72B /* Products */;
@@ -198,7 +206,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				ACA8308B1EEEE5D8000393EF /* Base */,
-				ACA830991EEEE604000393EF /* ko */,
 			);
 			name = LaunchScreen.storyboard;
 			path = ..;
@@ -209,6 +216,9 @@
 			children = (
 				ACA8308D1EEEE5D8000393EF /* Base */,
 				ACA8309A1EEEE60F000393EF /* ko */,
+				AC4BC1251EFD90AB006B66DB /* ja */,
+				AC4BC1281EFD950D006B66DB /* zh-Hans */,
+				AC4BC12B1EFD9513006B66DB /* zh-Hant */,
 			);
 			name = Main.storyboard;
 			path = ..;
@@ -218,6 +228,9 @@
 			isa = PBXVariantGroup;
 			children = (
 				ACA830931EEEE5E7000393EF /* ko */,
+				AC4BC1271EFD90AC006B66DB /* ja */,
+				AC4BC12A1EFD950E006B66DB /* zh-Hans */,
+				AC4BC12D1EFD9514006B66DB /* zh-Hant */,
 			);
 			name = Localizable.strings;
 			path = ..;
@@ -339,7 +352,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = 2WD7AYYV3U;
 				INFOPLIST_FILE = HClient/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "io.github.mario-kang.HClient";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -355,7 +368,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = 2WD7AYYV3U;
 				INFOPLIST_FILE = HClient/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "io.github.mario-kang.HClient";
 				PRODUCT_NAME = "$(TARGET_NAME)";

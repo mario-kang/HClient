@@ -40,6 +40,7 @@
 @synthesize hitomiNumber;
 @synthesize numbered;
 @synthesize numberDic;
+@synthesize previewingContext;
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -54,7 +55,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     activityController = [[UIActivityIndicatorView alloc]initWithFrame:CGRectMake(0, 0, 32, 32)];
-    [activityController setCenter:self.view.center];
     [activityController setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleWhiteLarge];
     if (!numbered)
         [self.navigationItem setTitle:[String decodes:[NSString stringWithFormat:@"%@:%@",type,tag]]];
@@ -68,6 +68,12 @@
     numberDic = [[NSMutableDictionary alloc]init];
     [self.tableView setRowHeight:UITableViewAutomaticDimension];
     [self.tableView setEstimatedRowHeight:154.0f];
+    bool isForceTouchAvailable = false;
+    if ([self.traitCollection respondsToSelector:@selector(forceTouchCapability)])
+        isForceTouchAvailable = self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable;
+    if (isForceTouchAvailable) {
+        self.previewingContext = [self registerForPreviewingWithDelegate:self sourceView:self.view];
+    }
     page = 1;
     if (!numbered)
         [self downloadTask:page];
@@ -190,10 +196,11 @@
 }
 
 -(void)downloadTask:(NSUInteger)ind {
-    UIView *overlay = [[UIView alloc]initWithFrame:[[self tableView]frame]];
+    UIView *overlay = [[UIView alloc]initWithFrame:self.splitViewController.view.frame];
+    [activityController setCenter:self.splitViewController.view.center];
     [overlay setBackgroundColor:[UIColor blackColor]];
     [overlay setAlpha:0.8f];
-    [self.view addSubview:overlay];
+    [self.splitViewController.view addSubview:overlay];
     [overlay addSubview:activityController];
     activityController.hidden = NO;
     [activityController startAnimating];
@@ -274,10 +281,11 @@
 }
 
 -(void)downloadNumber {
-    UIView *overlay = [[UIView alloc]initWithFrame:[[self tableView]frame]];
+    UIView *overlay = [[UIView alloc]initWithFrame:self.splitViewController.view.frame];
+    [activityController setCenter:self.splitViewController.view.center];
     [overlay setBackgroundColor:[UIColor blackColor]];
     [overlay setAlpha:0.8f];
-    [self.view addSubview:overlay];
+    [self.splitViewController.view addSubview:overlay];
     [overlay addSubview:activityController];
     activityController.hidden = NO;
     [activityController startAnimating];
@@ -425,18 +433,50 @@
         url = [NSURL URLWithString:[NSString stringWithFormat:@"https://hitomi.la/galleries/%ld.html",(long)numb]];
     }
     UIAlertController *sheet = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    UIAlertAction *activity = [UIAlertAction actionWithTitle:NSLocalizedString(@"Share URL", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        UIActivityViewController *activityController = [[UIActivityViewController alloc]initWithActivityItems:@[url] applicationActivities:nil];
+        [[activityController popoverPresentationController]setBarButtonItem:self.navigationItem.rightBarButtonItem];
+        [self presentViewController:activityController animated:YES completion:nil];
+    }];
     UIAlertAction *open = [UIAlertAction actionWithTitle:NSLocalizedString(@"Open in Safari",nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        if (@available(iOS 9.0, *)) {
-            SFSafariViewController *safari = [[SFSafariViewController alloc]initWithURL:url];
-            [self presentViewController:safari animated:YES completion:nil];
-        }
-        else
-            [[UIApplication sharedApplication]openURL:url];
+        SFSafariViewController *safari = [[SFSafariViewController alloc]initWithURL:url];
+        if (@available(iOS 10.0, *))
+            [safari setPreferredBarTintColor:[UIColor colorWithHue:235.0f/360.0f saturation:0.77f brightness:0.47f alpha:1.0f]];
+        [self presentViewController:safari animated:YES completion:nil];
     }];
     UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel",nil) style:UIAlertActionStyleCancel handler:nil];
+    [sheet addAction:activity];
     [sheet addAction:open];
     [sheet addAction:cancel];
+    [[sheet popoverPresentationController]setBarButtonItem:self.navigationItem.rightBarButtonItem];
     [self presentViewController:sheet animated:YES completion:nil];
+}
+
+-(UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location {
+    CGPoint cellPosition = [self.tableView convertPoint:location toView:self.view];
+    NSIndexPath *path = [self.tableView indexPathForRowAtPoint:cellPosition];
+    if (path) {
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        InfoDetail *segued = [storyboard instantiateViewControllerWithIdentifier:@"io.github.mario-kang.HClient.infodetail"];
+        if (!numbered) {
+            NSString *title1 = [arr objectAtIndex:path.row];
+            NSString *title2 = [[title1 componentsSeparatedByString:@".html\">"]objectAtIndex:0];
+            NSString *title3 = [[title2 componentsSeparatedByString:@"<a href=\""]objectAtIndex:1];
+            djURL = [NSString stringWithFormat:@"https://hitomi.la%@.html",title3];
+            segued.URL = djURL;
+        }
+        else {
+            NSInteger numb = [hitomiNumber integerValue];
+            djURL = [NSString stringWithFormat:@"https://hitomi.la/galleries/%ld.html",(long)numb];
+            segued.URL = djURL;
+        }
+        return segued;
+    }
+    return nil;
+}
+
+-(void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit {
+    [self.navigationController showViewController:viewControllerToCommit sender:nil];
 }
 
 @end

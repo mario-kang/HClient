@@ -16,12 +16,10 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    if (@available(iOS 9.0,*)) {
-        UIApplicationShortcutItem *item1 = [[UIApplicationShortcutItem alloc]initWithType:@"io.github.mario-kang.HClient.news" localizedTitle:NSLocalizedString(@"New",nil) localizedSubtitle:nil icon:[UIApplicationShortcutIcon iconWithTemplateImageName:@"mainmenu"] userInfo:nil];
-        UIApplicationShortcutItem *item2 = [[UIApplicationShortcutItem alloc]initWithType:@"io.github.mario-kang.HClient.search" localizedTitle:NSLocalizedString(@"Search",nil) localizedSubtitle:nil icon:[UIApplicationShortcutIcon iconWithTemplateImageName:@"search"] userInfo:nil];
-        UIApplicationShortcutItem *item3 = [[UIApplicationShortcutItem alloc]initWithType:@"io.github.mario-kang.HClient.favorites" localizedTitle:NSLocalizedString(@"Favorites",nil) localizedSubtitle:nil icon:[UIApplicationShortcutIcon iconWithTemplateImageName:@"favorite"] userInfo:nil];
-        [[UIApplication sharedApplication]setShortcutItems:@[item1,item2,item3]];
-    }
+    UIApplicationShortcutItem *item1 = [[UIApplicationShortcutItem alloc]initWithType:@"io.github.mario-kang.HClient.news" localizedTitle:NSLocalizedString(@"New",nil) localizedSubtitle:nil icon:[UIApplicationShortcutIcon iconWithTemplateImageName:@"mainmenu"] userInfo:nil];
+    UIApplicationShortcutItem *item2 = [[UIApplicationShortcutItem alloc]initWithType:@"io.github.mario-kang.HClient.search" localizedTitle:NSLocalizedString(@"Search",nil) localizedSubtitle:nil icon:[UIApplicationShortcutIcon iconWithTemplateImageName:@"search"] userInfo:nil];
+    UIApplicationShortcutItem *item3 = [[UIApplicationShortcutItem alloc]initWithType:@"io.github.mario-kang.HClient.favorites" localizedTitle:NSLocalizedString(@"Favorites",nil) localizedSubtitle:nil icon:[UIApplicationShortcutIcon iconWithTemplateImageName:@"favorite"] userInfo:nil];
+    [[UIApplication sharedApplication]setShortcutItems:@[item1,item2,item3]];
     return YES;
 }
 

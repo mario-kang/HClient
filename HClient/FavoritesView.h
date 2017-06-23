@@ -10,7 +10,7 @@
 #import "String.h"
 #import "InfoDetail.h"
 
-@interface FavoritesView : UITableViewController <UITableViewDelegate, UITableViewDataSource>
+@interface FavoritesView : UITableViewController  <UIViewControllerPreviewingDelegate>
 
 @property (strong) UIActivityIndicatorView *activityController;
 @property (strong) NSMutableArray *arr;
@@ -18,6 +18,8 @@
 @property (strong) NSString *djURL;
 @property (strong) NSMutableArray *favoriteslist;
 @property (strong) NSMutableArray *favoritesdata;
+
+@property (strong) id previewingContext;
 
 @property bool pages;
 @property NSInteger page;

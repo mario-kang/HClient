@@ -11,7 +11,7 @@
 #import "String.h"
 #import "Viewer.h"
 
-@interface InfoDetail : UIViewController
+@interface InfoDetail : UIViewController 
 
 @property (strong) IBOutlet UIImageView *Image;
 @property (strong) IBOutlet UILabel *Title;

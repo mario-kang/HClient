@@ -20,19 +20,27 @@
 @synthesize allList;
 @synthesize allList2;
 
+@synthesize previewingContext;
+
 @synthesize Active;
 @synthesize tags;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    activityController = [[UIActivityIndicatorView alloc]initWithFrame:CGRectMake(0, 0, 32, 32)];
-    [activityController setCenter:self.view.center];
-    [activityController setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    bool isForceTouchAvailable = false;
+    if ([self.traitCollection respondsToSelector:@selector(forceTouchCapability)])
+        isForceTouchAvailable = self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable;
+    if (isForceTouchAvailable)
+        self.previewingContext = [self registerForPreviewingWithDelegate:self sourceView:self.view];
     allList = [[NSMutableArray alloc]init];
-    UIView *overlay = [[UIView alloc]initWithFrame:[[self tableView]frame]];
+    UIView *overlay = [[UIView alloc]initWithFrame:self.splitViewController.view.frame];
     [overlay setBackgroundColor:[UIColor blackColor]];
+    [overlay setAutoresizingMask:[self.tableView autoresizingMask]];
     [overlay setAlpha:0.8f];
-    [self.view addSubview:overlay];
+    [self.splitViewController.view addSubview:overlay];
+    activityController = [[UIActivityIndicatorView alloc]initWithFrame:CGRectMake(0, 0, 32, 32)];
+    [activityController setCenter:overlay.center];
+    [activityController setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleWhiteLarge];
     [overlay addSubview:activityController];
     activityController.hidden = NO;
     [activityController startAnimating];
@@ -217,6 +225,31 @@
         segued.hitomiNumber = searchWord;
         segued.numbered = YES;
     }
+}
+
+-(UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location {
+    CGPoint cellPosition = [self.tableView convertPoint:location toView:self.view];
+    NSIndexPath *path = [self.tableView indexPathForRowAtPoint:cellPosition];
+    if (path) {
+        UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:path];
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        SearchView *segued = [storyboard instantiateViewControllerWithIdentifier:@"io.github.mario-kang.HClient.searchview"];
+        if ([cell.reuseIdentifier isEqualToString:@"list"]) {
+            segued.tag = [[allList2 objectAtIndex:path.row]objectForKey:@"name"];
+            segued.type = [[allList2 objectAtIndex:path.row]objectForKey:@"type"];
+            segued.numbered = NO;
+        }
+        else {
+            segued.hitomiNumber = searchWord;
+            segued.numbered = YES;
+        }
+        return segued;
+    }
+    return nil;
+}
+
+-(void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit {
+    [self.navigationController showViewController:viewControllerToCommit sender:nil];
 }
 
 @end

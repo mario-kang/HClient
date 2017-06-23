@@ -12,12 +12,14 @@
 #import "InfoDetail.h"
 
 
-@interface mainMenu : UITableViewController <UITableViewDelegate, UITableViewDataSource>
+@interface mainMenu : UITableViewController <UIViewControllerPreviewingDelegate>
 
 @property (strong) UIActivityIndicatorView *activityController;
 @property (strong) NSMutableArray *arr;
 @property (strong) NSMutableArray *arr2;
 @property (strong) NSString *djURL;
+
+@property (strong) id previewingContext;
 
 @property bool pages;
 @property NSInteger page;

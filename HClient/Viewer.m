@@ -56,6 +56,11 @@
     [task1 resume];
 }
 
+-(void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [[UIApplication sharedApplication]setNetworkActivityIndicatorVisible:NO];
+}
+
 -(void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation {
     [[UIApplication sharedApplication]setNetworkActivityIndicatorVisible:YES];
 }
@@ -73,18 +78,24 @@
 
 - (IBAction)Action:(id)sender {
     UIAlertController *sheet = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    NSString *ViewerURL = [NSString stringWithFormat:@"https://hitomi.la%@",URL];
+    UIAlertAction *activity = [UIAlertAction actionWithTitle:NSLocalizedString(@"Share URL", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        NSURL *url = [NSURL URLWithString:ViewerURL];
+        UIActivityViewController *activityController = [[UIActivityViewController alloc]initWithActivityItems:@[url] applicationActivities:nil];
+        [[activityController popoverPresentationController]setBarButtonItem:self.navigationItem.rightBarButtonItem];
+        [self presentViewController:activityController animated:YES completion:nil];
+    }];
     UIAlertAction *open = [UIAlertAction actionWithTitle:NSLocalizedString(@"Open in Safari",nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        NSString *ViewerURL = [NSString stringWithFormat:@"https://hitomi.la%@",URL];
-        if (@available(iOS 9.0, *)) {
-            SFSafariViewController *safari = [[SFSafariViewController alloc]initWithURL:[NSURL URLWithString:ViewerURL]];
-            [self presentViewController:safari animated:YES completion:nil];
-        }
-        else
-            [[UIApplication sharedApplication]openURL:[NSURL URLWithString:ViewerURL]];
+        SFSafariViewController *safari = [[SFSafariViewController alloc]initWithURL:[NSURL URLWithString:ViewerURL]];
+        if (@available(iOS 10.0, *))
+            [safari setPreferredBarTintColor:[UIColor colorWithHue:235.0f/360.0f saturation:0.77f brightness:0.47f alpha:1.0f]];
+        [self presentViewController:safari animated:YES completion:nil];
     }];
     UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel",nil) style:UIAlertActionStyleCancel handler:nil];
+    [sheet addAction:activity];
     [sheet addAction:open];
     [sheet addAction:cancel];
+    [[sheet popoverPresentationController]setBarButtonItem:self.navigationItem.rightBarButtonItem];
     [self presentViewController:sheet animated:YES completion:nil];
 }
 

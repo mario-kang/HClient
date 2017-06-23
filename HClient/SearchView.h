@@ -11,7 +11,7 @@
 #import "String.h"
 #import "InfoDetail.h"
 
-@interface SearchView : UITableViewController
+@interface SearchView : UITableViewController <UIViewControllerPreviewingDelegate>
 
 @property (strong) UIActivityIndicatorView *activityController;
 @property (strong) NSString *type;
@@ -24,6 +24,8 @@
 @property bool pages;
 @property bool numbered;
 @property NSInteger page;
+
+@property (strong) id previewingContext;
 
 @end
 

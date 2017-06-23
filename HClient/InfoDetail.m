@@ -28,12 +28,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     activityController = [[UIActivityIndicatorView alloc]initWithFrame:CGRectMake(0, 0, 32, 32)];
-    [activityController setCenter:self.view.center];
+    [activityController setCenter:self.splitViewController.view.center];
     [activityController setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleWhiteLarge];
-    UIView *overlay = [[UIView alloc]initWithFrame:[[self view]frame]];
+    UIView *overlay = [[UIView alloc]initWithFrame:self.splitViewController.view.frame];
     [overlay setBackgroundColor:[UIColor blackColor]];
     [overlay setAlpha:0.8f];
-    [self.view addSubview:overlay];
+    [self.splitViewController.view addSubview:overlay];
     [overlay addSubview:activityController];
     activityController.hidden = NO;
     [activityController startAnimating];
@@ -129,13 +129,17 @@
     NSUserDefaults *favorites = [NSUserDefaults standardUserDefaults];
     NSMutableArray *favoriteslist = [NSMutableArray arrayWithArray:[favorites arrayForKey:@"favorites"]];
     UIAlertController *sheet = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    UIAlertAction *activity = [UIAlertAction actionWithTitle:NSLocalizedString(@"Share URL", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        NSURL *url = [NSURL URLWithString:URL];
+        UIActivityViewController *activityController = [[UIActivityViewController alloc]initWithActivityItems:@[url] applicationActivities:nil];
+        [[activityController popoverPresentationController]setBarButtonItem:self.navigationItem.rightBarButtonItem];
+        [self presentViewController:activityController animated:YES completion:nil];
+    }];
     UIAlertAction *open = [UIAlertAction actionWithTitle:NSLocalizedString(@"Open in Safari",nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        if (@available(iOS 9.0, *)) {
-            SFSafariViewController *safari = [[SFSafariViewController alloc]initWithURL:[NSURL URLWithString:URL]];
-            [self presentViewController:safari animated:YES completion:nil];
-        }
-        else
-            [[UIApplication sharedApplication]openURL:[NSURL URLWithString:URL]];
+        SFSafariViewController *safari = [[SFSafariViewController alloc]initWithURL:[NSURL URLWithString:URL]];
+        if (@available(iOS 10.0, *))
+            [safari setPreferredBarTintColor:[UIColor colorWithHue:235.0f/360.0f saturation:0.77f brightness:0.47f alpha:1.0f]];
+        [self presentViewController:safari animated:YES completion:nil];
     }];
     UIAlertAction *bookmark;
     if (![favoriteslist containsObject:URL])
@@ -151,9 +155,11 @@
             [favorites synchronize];
         }];
     UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel",nil) style:UIAlertActionStyleCancel handler:nil];
+    [sheet addAction:activity];
     [sheet addAction:open];
     [sheet addAction:bookmark];
     [sheet addAction:cancel];
+    [[sheet popoverPresentationController]setBarButtonItem:self.navigationItem.rightBarButtonItem];
     [self presentViewController:sheet animated:YES completion:nil];
 }
 

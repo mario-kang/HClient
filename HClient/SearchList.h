@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "SearchView.h"
 
-@interface SearchList : UITableViewController<UISearchBarDelegate>
+@interface SearchList : UITableViewController<UISearchBarDelegate, UIViewControllerPreviewingDelegate>
 
 @property (weak, nonatomic) IBOutlet UISearchBar *Search;
 
@@ -17,6 +17,8 @@
 @property (strong) NSArray *allList2;
 @property (strong) UIActivityIndicatorView *activityController;
 @property (strong) NSString *searchWord;
+
+@property (strong) id previewingContext;
 
 @property bool Active;
 @property bool tags;
