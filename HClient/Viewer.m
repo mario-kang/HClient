@@ -35,7 +35,7 @@
             NSMutableString *HTMLString = [NSMutableString stringWithString:@"<!DOCTYPE HTML><style>img{width:100%;}</style>"];
             NSArray *list = [str componentsSeparatedByString:@"<div class=\"img-url\">//g"];
             for (int i=0; i<list.count-1; i++) {
-                NSString *galleries = [[[list objectAtIndex:i+1]componentsSeparatedByString:@"</div>"]objectAtIndex:0];
+                NSString *galleries = [list[i+1]componentsSeparatedByString:@"</div>"][0];
                 [HTMLString appendString:[NSString stringWithFormat:@"<img src=\"https://ba%@\" >",galleries]];
             }
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -56,20 +56,20 @@
     [task1 resume];
 }
 
--(void)viewWillDisappear:(BOOL)animated {
+- (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [[UIApplication sharedApplication]setNetworkActivityIndicatorVisible:NO];
 }
 
--(void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation {
+- (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation {
     [[UIApplication sharedApplication]setNetworkActivityIndicatorVisible:YES];
 }
 
--(void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
+- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
     [[UIApplication sharedApplication]setNetworkActivityIndicatorVisible:NO];
 }
 
--(void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error {
+- (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error {
     [[UIApplication sharedApplication]setNetworkActivityIndicatorVisible:NO];
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Error Occured.",nil) message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *action = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:nil];
@@ -82,20 +82,20 @@
     UIAlertAction *activity = [UIAlertAction actionWithTitle:NSLocalizedString(@"Share URL", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         NSURL *url = [NSURL URLWithString:ViewerURL];
         UIActivityViewController *activityController = [[UIActivityViewController alloc]initWithActivityItems:@[url] applicationActivities:nil];
-        [[activityController popoverPresentationController]setBarButtonItem:self.navigationItem.rightBarButtonItem];
+        activityController.popoverPresentationController.barButtonItem = self.navigationItem.rightBarButtonItem;
         [self presentViewController:activityController animated:YES completion:nil];
     }];
     UIAlertAction *open = [UIAlertAction actionWithTitle:NSLocalizedString(@"Open in Safari",nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         SFSafariViewController *safari = [[SFSafariViewController alloc]initWithURL:[NSURL URLWithString:ViewerURL]];
         if (@available(iOS 10.0, *))
-            [safari setPreferredBarTintColor:[UIColor colorWithHue:235.0f/360.0f saturation:0.77f brightness:0.47f alpha:1.0f]];
+            safari.preferredBarTintColor = [UIColor colorWithHue:235.0f/360.0f saturation:0.77f brightness:0.47f alpha:1.0f];
         [self presentViewController:safari animated:YES completion:nil];
     }];
     UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel",nil) style:UIAlertActionStyleCancel handler:nil];
     [sheet addAction:activity];
     [sheet addAction:open];
     [sheet addAction:cancel];
-    [[sheet popoverPresentationController]setBarButtonItem:self.navigationItem.rightBarButtonItem];
+    sheet.popoverPresentationController.barButtonItem = self.navigationItem.rightBarButtonItem;
     [self presentViewController:sheet animated:YES completion:nil];
 }
 

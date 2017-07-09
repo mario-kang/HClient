@@ -17,6 +17,14 @@
 
 "Tags: " = "タグ：";
 
+"Groups: " = "グループ：";
+
+"Type: " = "種類：";
+
+"Character: " = "キャラクター：";
+
+"Date: " = "日付：";
+
 "Add to favorites" = "お気に入りに追加";
 
 "Remove from favorites" = "お気に入りから削除";
@@ -35,6 +43,8 @@
 
 "Hitomi Tags" = "Hitomiタグ";
 
+"Hitomi Items" = "Hitomiアイテム";
+
 "Hitomi Number" = "Hitomiナンバー";
 
 "Could not find number %ld." = "Hitomiナンバー%ldを見つかることができませんでした。";
@@ -46,3 +56,5 @@
 "HClient does not support Anime." = "HClientはアニメをサポートしていません。";
 
 "Share URL" = "URLをシェア";
+
+"Open in Viewer" = "ビューアで開く";

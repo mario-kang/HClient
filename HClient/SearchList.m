@@ -22,7 +22,6 @@
 
 @synthesize previewingContext;
 
-@synthesize Active;
 @synthesize tags;
 
 - (void)viewDidLoad {
@@ -34,19 +33,18 @@
         self.previewingContext = [self registerForPreviewingWithDelegate:self sourceView:self.view];
     allList = [[NSMutableArray alloc]init];
     UIView *overlay = [[UIView alloc]initWithFrame:self.splitViewController.view.frame];
-    [overlay setBackgroundColor:[UIColor blackColor]];
-    [overlay setAutoresizingMask:[self.tableView autoresizingMask]];
-    [overlay setAlpha:0.8f];
+    overlay.backgroundColor = [UIColor blackColor];
+    overlay.autoresizingMask = (self.tableView).autoresizingMask;
+    overlay.alpha = 0.8f;
     [self.splitViewController.view addSubview:overlay];
     activityController = [[UIActivityIndicatorView alloc]initWithFrame:CGRectMake(0, 0, 32, 32)];
-    [activityController setCenter:overlay.center];
-    [activityController setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    activityController.center = overlay.center;
+    activityController.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhiteLarge;
     [overlay addSubview:activityController];
     activityController.hidden = NO;
     [activityController startAnimating];
     NSString *urlString = @"https://ltn.hitomi.la/tags.json";
     Search.delegate = self;
-    Active = NO;
     [Search setUserInteractionEnabled:NO];
     NSURL *URL = [NSURL URLWithString:urlString];
     NSURLRequest *request = [NSURLRequest requestWithURL:URL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0f];
@@ -89,88 +87,77 @@
     [[UIApplication sharedApplication]setNetworkActivityIndicatorVisible:NO];
 }
 
--(void)addAll:(NSString *)type list:(NSDictionary *)list {
-    for (NSDictionary *a in [list objectForKey:type]) {
-        NSString *name = [a objectForKey:@"s"];
-        NSString *count = [a objectForKey:@"t"];
-        NSMutableDictionary *dic = [[NSMutableDictionary alloc]init];
-        [dic setObject:name forKey:@"name"];
-        [dic setObject:count forKey:@"count"];
-        [dic setObject:type forKey:@"type"];
+- (void)addAll:(NSString *)type list:(NSDictionary *)list {
+    NSString *name, *count;
+    NSMutableDictionary *dic;
+    for (NSDictionary *a in list[type]) {
+        name = a[@"s"];
+        count = a[@"t"];
+        dic = [[NSMutableDictionary alloc]init];
+        dic[@"name"] = name;
+        dic[@"count"] = count;
+        dic[@"type"] = type;
         [allList addObject:dic];
     }
 }
 
--(void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar {
-    Active = YES;
-}
-
--(void)searchBarTextDidEndEditing:(UISearchBar *)searchBar {
-    Active = NO;
-}
-
--(void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
-    Active = NO;
-}
-
--(void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
-    Active = NO;
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
     [self.view endEditing:YES];
 }
 
--(void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
     NSPredicate *predicate;
     searchWord = searchText;
-    if ([[searchText lowercaseString] hasPrefix:@"tag:"]) {
-        if (![[searchText lowercaseString] isEqualToString:@"tag:"]) {
-            predicate = [NSPredicate predicateWithFormat:@"name CONTAINS %@ AND type LIKE 'tag'",[[searchText lowercaseString]substringFromIndex:4]];
+    if ([searchText.lowercaseString hasPrefix:@"tag:"]) {
+        if (![searchText.lowercaseString isEqualToString:@"tag:"]) {
+            predicate = [NSPredicate predicateWithFormat:@"name CONTAINS %@ AND type LIKE 'tag'",[searchText.lowercaseString substringFromIndex:4]];
             allList2 = [allList filteredArrayUsingPredicate:predicate];
         }
     }
-    else if ([[searchText lowercaseString] hasPrefix:@"artist:"]) {
-        if (![[searchText lowercaseString] isEqualToString:@"artist:"]) {
-            predicate = [NSPredicate predicateWithFormat:@"name CONTAINS %@ AND type LIKE 'artist'",[[searchText lowercaseString]substringFromIndex:7]];
+    else if ([searchText.lowercaseString hasPrefix:@"artist:"]) {
+        if (![searchText.lowercaseString isEqualToString:@"artist:"]) {
+            predicate = [NSPredicate predicateWithFormat:@"name CONTAINS %@ AND type LIKE 'artist'",[searchText.lowercaseString substringFromIndex:7]];
             allList2 = [allList filteredArrayUsingPredicate:predicate];
         }
     }
-    else if ([[searchText lowercaseString] hasPrefix:@"male:"]) {
-        if (![[searchText lowercaseString] isEqualToString:@"male:"]) {
-            predicate = [NSPredicate predicateWithFormat:@"name CONTAINS %@ AND type LIKE 'male'",[[searchText lowercaseString]substringFromIndex:5]];
+    else if ([searchText.lowercaseString hasPrefix:@"male:"]) {
+        if (![searchText.lowercaseString isEqualToString:@"male:"]) {
+            predicate = [NSPredicate predicateWithFormat:@"name CONTAINS %@ AND type LIKE 'male'",[searchText.lowercaseString substringFromIndex:5]];
             allList2 = [allList filteredArrayUsingPredicate:predicate];
         }
     }
-    else if ([[searchText lowercaseString] hasPrefix:@"female:"]) {
-        if (![[searchText lowercaseString] isEqualToString:@"female:"]) {
-            predicate = [NSPredicate predicateWithFormat:@"name CONTAINS %@ AND type LIKE 'female'",[[searchText lowercaseString]substringFromIndex:7]];
+    else if ([searchText.lowercaseString hasPrefix:@"female:"]) {
+        if (![searchText.lowercaseString isEqualToString:@"female:"]) {
+            predicate = [NSPredicate predicateWithFormat:@"name CONTAINS %@ AND type LIKE 'female'",[searchText.lowercaseString substringFromIndex:7]];
             allList2 = [allList filteredArrayUsingPredicate:predicate];
         }
     }
-    else if ([[searchText lowercaseString] hasPrefix:@"series:"]) {
-        if (![[searchText lowercaseString] isEqualToString:@"series:"]) {
-            predicate = [NSPredicate predicateWithFormat:@"name CONTAINS %@ AND type LIKE 'series'",[[searchText lowercaseString]substringFromIndex:7]];
+    else if ([searchText.lowercaseString hasPrefix:@"series:"]) {
+        if (![searchText.lowercaseString isEqualToString:@"series:"]) {
+            predicate = [NSPredicate predicateWithFormat:@"name CONTAINS %@ AND type LIKE 'series'",[searchText.lowercaseString substringFromIndex:7]];
             allList2 = [allList filteredArrayUsingPredicate:predicate];
         }
     }
-    else if ([[searchText lowercaseString] hasPrefix:@"group:"]) {
-        if (![[searchText lowercaseString] isEqualToString:@"group:"]) {
-            predicate = [NSPredicate predicateWithFormat:@"name CONTAINS %@ AND type LIKE 'group'",[[searchText lowercaseString]substringFromIndex:6]];
+    else if ([searchText.lowercaseString hasPrefix:@"group:"]) {
+        if (![searchText.lowercaseString isEqualToString:@"group:"]) {
+            predicate = [NSPredicate predicateWithFormat:@"name CONTAINS %@ AND type LIKE 'group'",[searchText.lowercaseString substringFromIndex:6]];
             allList2 = [allList filteredArrayUsingPredicate:predicate];
         }
     }
-    else if ([[searchText lowercaseString] hasPrefix:@"character:"]) {
-        if (![[searchText lowercaseString] isEqualToString:@"character:"]) {
-            predicate = [NSPredicate predicateWithFormat:@"name CONTAINS %@ AND type LIKE 'character'",[[searchText lowercaseString]substringFromIndex:10]];
+    else if ([searchText.lowercaseString hasPrefix:@"character:"]) {
+        if (![searchText.lowercaseString isEqualToString:@"character:"]) {
+            predicate = [NSPredicate predicateWithFormat:@"name CONTAINS %@ AND type LIKE 'character'",[searchText.lowercaseString substringFromIndex:10]];
             allList2 = [allList filteredArrayUsingPredicate:predicate];
         }
     }
-    else if ([[searchText lowercaseString] hasPrefix:@"language:"]) {
-        if (![[searchText lowercaseString] isEqualToString:@"language:"]) {
-            predicate = [NSPredicate predicateWithFormat:@"name CONTAINS %@ AND type LIKE 'language'",[[searchText lowercaseString]substringFromIndex:10]];
+    else if ([searchText.lowercaseString hasPrefix:@"language:"]) {
+        if (![searchText.lowercaseString isEqualToString:@"language:"]) {
+            predicate = [NSPredicate predicateWithFormat:@"name CONTAINS %@ AND type LIKE 'language'",[searchText.lowercaseString substringFromIndex:10]];
             allList2 = [allList filteredArrayUsingPredicate:predicate];
         }
     }
     else {
-        predicate = [NSPredicate predicateWithFormat:@"name CONTAINS %@",[searchText lowercaseString]];
+        predicate = [NSPredicate predicateWithFormat:@"name CONTAINS %@",searchText.lowercaseString];
         allList2 = [allList filteredArrayUsingPredicate:predicate];
     }
     [self.tableView reloadData];
@@ -180,7 +167,7 @@
     return 2;
 }
 
--(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     if (section == 0)
         return NSLocalizedString(@"Hitomi Tags", nil);
     else
@@ -199,35 +186,34 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 0) {
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"list" forIndexPath:indexPath];
-        [cell.textLabel setText:[[allList2 objectAtIndex:indexPath.row]objectForKey:@"name"]];
-        NSString *a = [NSString stringWithFormat:NSLocalizedString(@"%@, %ld item(s)",nil), [[allList2 objectAtIndex:indexPath.row]objectForKey:@"type"],(long)[[[allList2 objectAtIndex:indexPath.row]objectForKey:@"count"]integerValue]];
-        [cell.detailTextLabel setText:a];
+        (cell.textLabel).text = allList2[indexPath.row][@"name"];
+        NSString *a = [NSString stringWithFormat:NSLocalizedString(@"%@, %ld item(s)",nil), allList2[indexPath.row][@"type"],(long)[allList2[indexPath.row][@"count"]integerValue]];
+        (cell.detailTextLabel).text = a;
         return cell;
     }
     else {
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"number" forIndexPath:indexPath];
-        NSInteger hitomiNumber = [searchWord integerValue];
-        [cell.textLabel setText:[NSString stringWithFormat:NSLocalizedString(@"Find Hitomi number %ld", nil),(long)hitomiNumber]];
+        NSInteger hitomiNumber = searchWord.integerValue;
+        (cell.textLabel).text = [NSString stringWithFormat:NSLocalizedString(@"Find Hitomi number %ld", nil),(long)hitomiNumber];
         return cell;
     }
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    SearchView *segued = segue.destinationViewController;
     if ([segue.identifier isEqualToString:@"search"]) {
-        SearchView *segued = segue.destinationViewController;
         NSIndexPath *indexPath = self.tableView.indexPathForSelectedRow;
-        segued.tag = [[allList2 objectAtIndex:indexPath.row]objectForKey:@"name"];
-        segued.type = [[allList2 objectAtIndex:indexPath.row]objectForKey:@"type"];
+        segued.tag = allList2[indexPath.row][@"name"];
+        segued.type = allList2[indexPath.row][@"type"];
         segued.numbered = NO;
     }
     else {
-        SearchView *segued = segue.destinationViewController;
         segued.hitomiNumber = searchWord;
         segued.numbered = YES;
     }
 }
 
--(UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location {
+- (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location {
     CGPoint cellPosition = [self.tableView convertPoint:location toView:self.view];
     NSIndexPath *path = [self.tableView indexPathForRowAtPoint:cellPosition];
     if (path) {
@@ -235,8 +221,8 @@
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
         SearchView *segued = [storyboard instantiateViewControllerWithIdentifier:@"io.github.mario-kang.HClient.searchview"];
         if ([cell.reuseIdentifier isEqualToString:@"list"]) {
-            segued.tag = [[allList2 objectAtIndex:path.row]objectForKey:@"name"];
-            segued.type = [[allList2 objectAtIndex:path.row]objectForKey:@"type"];
+            segued.tag = allList2[path.row][@"name"];
+            segued.type = allList2[path.row][@"type"];
             segued.numbered = NO;
         }
         else {
@@ -248,7 +234,7 @@
     return nil;
 }
 
--(void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit {
+- (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit {
     [self.navigationController showViewController:viewControllerToCommit sender:nil];
 }
 

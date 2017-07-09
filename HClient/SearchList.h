@@ -20,7 +20,6 @@
 
 @property (strong) id previewingContext;
 
-@property bool Active;
 @property bool tags;
 
 @end

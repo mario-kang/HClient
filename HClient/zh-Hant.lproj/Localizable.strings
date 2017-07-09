@@ -17,6 +17,14 @@
 
 "Tags: " = "標籤：";
 
+"Groups: " = "組：";
+
+"Type: " = "類型：";
+
+"Character: " = "人物：";
+
+"Date: " = "日期：";
+
 "Add to favorites" = "添加到書簽";
 
 "Remove from favorites" = "從書簽中刪除";
@@ -37,6 +45,8 @@
 
 "Hitomi Tags" = "Hitomi標籤";
 
+"Hitomi Items" = "Hitomi項目";
+
 "Hitomi Number" = "Hitomi號碼";
 
 "Could not find number %ld." = "找不到Hitomi號碼%ld。";
@@ -48,3 +58,5 @@
 "HClient does not support Anime." = "HClient不支持動漫。";
 
 "Share URL" = "共享URL";
+
+"Open in Viewer" = "在瀏覽器打開";

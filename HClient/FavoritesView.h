@@ -9,15 +9,16 @@
 #import <UIKit/UIKit.h>
 #import "String.h"
 #import "InfoDetail.h"
+#import "SearchView.h"
 
 @interface FavoritesView : UITableViewController  <UIViewControllerPreviewingDelegate>
 
 @property (strong) UIActivityIndicatorView *activityController;
 @property (strong) NSMutableArray *arr;
 @property (strong) NSMutableArray *arr2;
-@property (strong) NSString *djURL;
 @property (strong) NSMutableArray *favoriteslist;
 @property (strong) NSMutableArray *favoritesdata;
+@property (strong) NSMutableArray *favoriteskeys;
 
 @property (strong) id previewingContext;
 
@@ -28,11 +29,11 @@
 
 @interface FavoritesCell : UITableViewCell
 
-@property (weak) IBOutlet UIImageView *DJImage;
-@property (weak) IBOutlet UILabel *DJTitle;
-@property (weak) IBOutlet UILabel *DJArtist;
-@property (weak) IBOutlet UILabel *DJLang;
-@property (weak) IBOutlet UILabel *DJTag;
-@property (weak) IBOutlet UILabel *DJSeries;
+@property (weak, nonatomic) IBOutlet UIImageView *DJImage;
+@property (weak, nonatomic) IBOutlet UILabel *DJTitle;
+@property (weak, nonatomic) IBOutlet UILabel *DJArtist;
+@property (weak, nonatomic) IBOutlet UILabel *DJLang;
+@property (weak, nonatomic) IBOutlet UILabel *DJTag;
+@property (weak, nonatomic) IBOutlet UILabel *DJSeries;
 
 @end

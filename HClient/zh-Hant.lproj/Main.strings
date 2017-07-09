@@ -2,9 +2,6 @@
 /* Class = "UILabel"; text = "Main Page"; ObjectID = "6mh-z3-n09"; */
 "6mh-z3-n09.text" = "首頁";
 
-/* Class = "UILabel"; text = "Title"; ObjectID = "Bna-sS-TpL"; */
-"Bna-sS-TpL.text" = "題目";
-
 /* Class = "UISearchBar"; placeholder = "Search Tags or Number"; ObjectID = "FIa-7N-FkC"; */
 "FIa-7N-FkC.placeholder" = "搜尋標籤或號碼";
 

@@ -10,15 +10,23 @@
 #import <SafariServices/SafariServices.h>
 #import "String.h"
 #import "Viewer.h"
+#import "SearchView.h"
+#import "Viewer.h"
 
-@interface InfoDetail : UIViewController 
+@interface InfoDetail : UIViewController
 
-@property (strong) IBOutlet UIImageView *Image;
-@property (strong) IBOutlet UILabel *Title;
-@property (strong) IBOutlet UILabel *Artist;
-@property (strong) IBOutlet UILabel *Series;
-@property (strong) IBOutlet UILabel *Language;
-@property (strong) IBOutlet UILabel *Tag;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *actionIcon;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *bookmarkIcon;
+@property (weak, nonatomic) IBOutlet UIImageView *Image;
+@property (weak, nonatomic) IBOutlet UILabel *Title;
+@property (weak, nonatomic) IBOutlet UILabel *Artist;
+@property (weak, nonatomic) IBOutlet UILabel *Group;
+@property (weak, nonatomic) IBOutlet UILabel *Type;
+@property (weak, nonatomic) IBOutlet UILabel *Series;
+@property (weak, nonatomic) IBOutlet UILabel *Character;
+@property (weak, nonatomic) IBOutlet UILabel *Language;
+@property (weak, nonatomic) IBOutlet UILabel *Tag;
+@property (weak, nonatomic) IBOutlet UILabel *Date;
 
 @property (strong) UIActivityIndicatorView *activityController;
 @property (strong) NSString *URL;
