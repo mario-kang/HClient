@@ -31,7 +31,7 @@
 		AC19FBDA1F1272CF006A42BC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		AC19FBF11F127409006A42BC /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = HClient/ja.lproj/Main.strings; sourceTree = "<group>"; };
 		AC19FBF41F12743D006A42BC /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = HClient/ko.lproj/Main.strings; sourceTree = "<group>"; };
-		AC19FBF61F12746A006A42BC /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = ../../../Downloads/main.m; sourceTree = "<group>"; };
+		AC19FBF61F12746A006A42BC /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		AC42DF601EEBA2C300C5F72B /* HClient.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HClient.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AC42DF631EEBA2C300C5F72B /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		AC42DF641EEBA2C300C5F72B /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
