@@ -1,0 +1,62 @@
+/* 
+  Localizable.strings
+  HClient
+
+  Created by 강희찬 on 2017. 6. 12..
+  Copyright © 2017년 mario-kang. All rights reserved.
+*/
+"Error Occured." = "Error Occured.";
+
+"%@, %ld item(s)" = "%@, %ld item(s)";
+
+"Artist: " = "Artist: ";
+
+"Language: " = "Language: ";
+
+"Series: " = "Series: ";
+
+"Tags: " = "Tags: ";
+
+"Groups: " = "Groups: ";
+
+"Type: " = "Type: ";
+
+"Character: " = "Character: ";
+
+"Date: " = "Date: ";
+
+"Add to favorites" = "Add to favorites";
+
+"Remove from favorites" = "Remove from favorites";
+
+"Cancel" = "Cancel";
+
+"OK" = "OK";
+
+"New" = "New";
+
+"Search" = "Search";
+
+"Favorites" = "Favorites";
+
+"Open in Safari" = "Open in Safari";
+
+"Find Hitomi number %ld" = "Find Hitomi number %ld";
+
+"Hitomi Tags" = "Hitomi Tags";
+
+"Hitomi Items" = "Hitomi Items";
+
+"Hitomi Number" = "Hitomi Number";
+
+"Could not find number %ld." = "Could not find number %ld.";
+
+"Hitomi number %ld" = "Hitomi number %ld";
+
+"This number is Anime." = "This number is Anime.";
+
+"HClient does not support Anime." = "HClient does not support Anime.";
+
+"Share URL" = "Share URL";
+
+"Open in Viewer" = "Open in Viewer";

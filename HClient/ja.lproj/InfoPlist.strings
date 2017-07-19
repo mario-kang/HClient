@@ -1,2 +1,2 @@
 
-NSPhotoLibraryAddUsageDescription = "HClientはビューアにある写真をセーブするためにフォトライブラリーを使用します。";
+NSPhotoLibraryUsageDescription = "HClientはビューアにある写真をセーブするためにフォトライブラリーを使用します。";

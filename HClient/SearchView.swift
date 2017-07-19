@@ -1,0 +1,601 @@
+//
+//  SearchView.swift
+//  HClient
+//
+//  Created by 강희찬 on 2017. 7. 17..
+//  Copyright © 2017년 mario-kang. All rights reserved.
+//
+
+import UIKit
+import SafariServices
+
+class SearchCell: UITableViewCell {
+    @IBOutlet weak var DJImage: UIImageView!
+    @IBOutlet weak var DJSeries: UILabel!
+    @IBOutlet weak var DJTitle: UILabel!
+    @IBOutlet weak var DJLang: UILabel!
+    @IBOutlet weak var DJTag: UILabel!
+    @IBOutlet weak var DJArtist: UILabel!
+}
+
+class SearchView: UITableViewController, UIViewControllerPreviewingDelegate {
+    
+    var activityController:UIActivityIndicatorView!
+    var type = ""
+    var tag = ""
+    var arr:[Any] = []
+    var arr2:[Any] = []
+    var arr3:[Any] = []
+    var celllist:[String] = []
+    var hitomiNumber = ""
+    var numberDic:[String:String] = [:]
+    var pages = false
+    var numbered = false
+    var page:UInt = 0
+    var previewingContext:Any?
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        activityController = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 32, height: 32))
+        activityController.activityIndicatorViewStyle = .whiteLarge
+        if !numbered {
+            self.navigationItem.title = Strings.decode("\(type):\(tag)")
+        }
+        else {
+            let numb = Int(hitomiNumber)
+            self.navigationItem.title = String(format: NSLocalizedString("Hitomi number %d", comment: ""), numb!)
+        }
+        pages = false
+        self.tableView.rowHeight = UITableViewAutomaticDimension
+        self.tableView.estimatedRowHeight = 154.0
+        if self.traitCollection.forceTouchCapability == UIForceTouchCapability.available {
+            self.previewingContext = self.registerForPreviewing(with: self as UIViewControllerPreviewingDelegate, sourceView: self.view)
+        }
+        page = 1
+        if !numbered {
+            downloadTask(page)
+        }
+        else {
+            downloadNumber()
+        }
+    }
+
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return arr2.count
+    }
+
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell:SearchCell = tableView.dequeueReusableCell(withIdentifier: "list", for: indexPath) as! SearchCell
+        if !numbered {
+            let list:String = arr[indexPath.row] as! String
+            let ar = list.components(separatedBy: "</a></h1>")
+            let title = ar[0].components(separatedBy: ".html\">")[2]
+            let etc = ar[1].components(separatedBy: "</div>")
+            let artlist = etc[0].components(separatedBy: "list\">")[1]
+            var artist = ""
+            if artlist.contains("N/A") {
+                artist.append("N/A")
+            }
+            else {
+                let a = artlist.components(separatedBy: "</a></li>")
+                let b = a.count-2
+                for i in 0...b {
+                    artist.append(a[i].components(separatedBy: ".html\">")[1])
+                    if i != b {
+                        artist.append(", ")
+                    }
+                }
+            }
+            let etc1 = etc[1].components(separatedBy: "</td>")
+            var series = NSLocalizedString("Series: ", comment: "")
+            if etc1[1].contains("N/A") {
+                series.append("N/A")
+            }
+            else {
+                let a = etc1[1].components(separatedBy: "</a></li>")
+                let b = a.count-2
+                for i in 0...b {
+                    series.append(a[i].components(separatedBy: ".html\">")[1])
+                    if i != b {
+                        series.append(", ")
+                    }
+                }
+            }
+            var language = NSLocalizedString("Language: ", comment: "")
+            if etc1[5].contains("N/A") {
+                language.append("N/A")
+            }
+            else {
+                language.append(etc1[5].components(separatedBy: ".html\">")[1].components(separatedBy: "</a>")[0])
+            }
+            var tag1 = NSLocalizedString("Tags: ", comment: "")
+            let taga = etc1[7].components(separatedBy: "</a></li>")
+            let tagb = taga.count
+            if tagb == 1 {
+                tag1.append("N/A")
+            }
+            else {
+                for i in 0...tagb-2 {
+                    tag1.append(taga[i].components(separatedBy: ".html\">")[1])
+                    if i != tagb-2 {
+                        tag1.append(", ")
+                    }
+                }
+            }
+            let session = URLSession.shared
+            let request = URLRequest(url: URL(string:arr2[indexPath.row] as! String)!, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 60.0)
+            if arr3[indexPath.row] is UIImage {
+                cell.DJImage.image = arr3[indexPath.row] as? UIImage
+            }
+            else {
+               cell.DJImage.image = nil
+            }
+            if !(celllist.contains(where: {$0 == "\(indexPath.row)"})) {
+                UIApplication.shared.isNetworkActivityIndicatorVisible = true
+                let sessionTask = session.dataTask(with: request, completionHandler: { (data, _, error) in
+                    if error == nil {
+                        let image = UIImage(data: data!)
+                        self.arr3[indexPath.row] = image!
+                        DispatchQueue.main.async {
+                            UIApplication.shared.isNetworkActivityIndicatorVisible = false
+                            cell.DJImage.image = image
+                        }
+                    }
+                })
+                sessionTask.resume()
+            }
+            cell.DJImage.contentMode = .scaleAspectFit
+            cell.DJTitle.text = Strings.decode(title)
+            cell.DJArtist.text = Strings.decode(artist)
+            cell.DJSeries.text = Strings.decode(series)
+            cell.DJLang.text = Strings.decode(language)
+            cell.DJTag.text = Strings.decode(tag1)
+            if !(celllist.contains {$0 == "\(indexPath.row)"}) {
+                celllist.append("\(indexPath.row)")
+            }
+            return cell
+        }
+        else {
+            cell.DJImage.contentMode = .scaleAspectFit
+            cell.DJTitle.text = Strings.decode(numberDic["title"])
+            cell.DJArtist.text = Strings.decode(numberDic["artist"])
+            cell.DJSeries.text = Strings.decode(numberDic["series"])
+            cell.DJLang.text = Strings.decode(numberDic["language"])
+            cell.DJTag.text = Strings.decode(numberDic["tag"])
+            let session = URLSession.shared
+            let request = URLRequest(url: URL(string:arr2[indexPath.row] as! String)!, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 60.0)
+            if arr3[indexPath.row] is UIImage {
+                cell.DJImage.image = arr3[indexPath.row] as? UIImage
+            }
+            else {
+                cell.DJImage.image = nil
+            }
+            if !(celllist.contains(where: {$0 == "\(indexPath.row)"})) {
+                UIApplication.shared.isNetworkActivityIndicatorVisible = true
+                let sessionTask = session.dataTask(with: request, completionHandler: { (data, _, error) in
+                    if error == nil {
+                        let image = UIImage(data: data!)
+                        self.arr3[indexPath.row] = image!
+                        DispatchQueue.main.async {
+                            UIApplication.shared.isNetworkActivityIndicatorVisible = false
+                            cell.DJImage.image = image
+                        }
+                    }
+                })
+                sessionTask.resume()
+            }
+            if !(celllist.contains {$0 == "\(indexPath.row)"}) {
+                celllist.append("\(indexPath.row)")
+            }
+            return cell
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.row + 1 == arr2.count && !pages && !numbered {
+            page += 1
+            downloadTask(page)
+            pages = true
+        }
+    }
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        var djURL = ""
+        let segued:InfoDetail = segue.destination as! InfoDetail
+        if segue.identifier == "djDetail3" && !numbered {
+            let path = self.tableView.indexPathForSelectedRow
+            let title = (arr[(path?.row)!] as! String).components(separatedBy: ".html\">")[0].components(separatedBy: "<a href=\"")[1]
+            djURL = "https://hitomi.la\(title).html"
+        }
+        else if segue.identifier == "djDetail3" && numbered {
+            let numb = Int(hitomiNumber)
+            djURL = "https://hitomi.la/galleries/\(numb!).html"
+            segued.URL1 = djURL
+        }
+        segued.URL1 = djURL
+    }
+    
+    func downloadTask(_ ind:UInt) {
+        var overlay:UIView
+        if self.splitViewController != nil {
+            overlay = UIView(frame: (self.splitViewController?.view.frame)!)
+            overlay.backgroundColor = UIColor.black
+            overlay.alpha = 0.8
+            activityController.center = (self.splitViewController?.view.center)!
+            self.splitViewController?.view.addSubview(overlay)
+        }
+        else {
+            overlay = UIView(frame: self.view.frame)
+            overlay.backgroundColor = UIColor.black
+            overlay.alpha = 0.8
+            activityController.center = self.view.center
+            self.view.addSubview(overlay)
+        }
+        overlay.addSubview(activityController)
+        activityController.isHidden = false
+        activityController.startAnimating()
+        var taga = tag
+        taga = taga.replacingOccurrences(of: " ", with: "%20")
+        var url:URL
+        if type == "male" || type == "female" {
+            url = URL(string: "https://hitomi.la/tag/\(type):\(taga)-all-\(ind).html")!
+        }
+        else if type == "language" {
+            url = URL(string: "https://hitomi.la/index-\(taga)-\(ind).html")!
+        }
+        else {
+            url = URL(string: "https://hitomi.la/\(type)/\(taga)-all-\(ind).html")!
+        }
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
+        let session = URLSession.shared
+        let request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 60.0)
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if error == nil && (response as! HTTPURLResponse).statusCode == 200 {
+                var str = String(data:data!, encoding:.utf8)
+                str = Strings.replacingOccurrences(str)
+                let temp = str?.components(separatedBy: "<div class=\"dj\">")
+                for i in 1...(temp?.count)!-1 {
+                    let list = temp?[i]
+                    let img = list?.components(separatedBy: "\"> </div>")[0]
+                    let imga = img?.components(separatedBy: "<img src=\"")[1]
+                    let urlString = "https:\(imga!)"
+                    self.arr.append(temp![i])
+                    self.arr2.append(urlString)
+                    self.arr3.append(NSNull())
+                }
+                DispatchQueue.main.async {
+                    UIApplication.shared.isNetworkActivityIndicatorVisible = false
+                    self.tableView.reloadData()
+                    self.activityController.isHidden = true
+                    self.activityController.stopAnimating()
+                    overlay.removeFromSuperview()
+                    self.pages = false
+                }
+            }
+            else if error == nil && (response as! HTTPURLResponse).statusCode != 200 {
+                DispatchQueue.main.async {
+                    UIApplication.shared.isNetworkActivityIndicatorVisible = false
+                    self.activityController.isHidden = true
+                    self.activityController.stopAnimating()
+                    overlay.removeFromSuperview()
+                    self.pages = true
+                }
+            }
+            else {
+                OperationQueue.main.addOperation {
+                    UIApplication.shared.isNetworkActivityIndicatorVisible = false
+                    let alert = UIAlertController(title: NSLocalizedString("Error Occured.", comment: ""), message: error?.localizedDescription, preferredStyle: .alert)
+                    let action = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .default, handler: nil)
+                    alert.addAction(action)
+                    self.present(alert, animated: true, completion: nil)
+                    self.activityController.isHidden = true
+                    self.activityController.stopAnimating()
+                    overlay.removeFromSuperview()
+                }
+            }
+        }
+        task.resume()
+        self.tableView.reloadData()
+    }
+    
+    func downloadNumber() {
+        var overlay:UIView
+        if self.splitViewController != nil {
+            overlay = UIView(frame: (self.splitViewController?.view.frame)!)
+            overlay.backgroundColor = UIColor.black
+            overlay.alpha = 0.8
+            activityController.center = (self.splitViewController?.view.center)!
+            self.splitViewController?.view.addSubview(overlay)
+        }
+        else {
+            overlay = UIView(frame: self.view.frame)
+            overlay.backgroundColor = UIColor.black
+            overlay.alpha = 0.8
+            activityController.center = self.view.center
+            self.view.addSubview(overlay)
+        }
+        overlay.addSubview(activityController)
+        activityController.isHidden = false
+        activityController.startAnimating()
+        let numb = Int(hitomiNumber)
+        let url = URL(string: "https://hitomi.la/galleries/\(numb!).html")
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
+        let session = URLSession.shared
+        let request = URLRequest(url: url!, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 60.0)
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if error == nil && (response as! HTTPURLResponse).statusCode == 200 {
+                let str = String(data: data!, encoding: .utf8)
+                let anime = str?.components(separatedBy: "<td>Type</td><td>")[1].components(separatedBy: "</a></td>")[0]
+                if (anime?.contains("anime"))! {
+                    OperationQueue.main.addOperation {
+                        UIApplication.shared.isNetworkActivityIndicatorVisible = false
+                        let alert = UIAlertController(title: NSLocalizedString("This number is Anime.", comment: ""), message: NSLocalizedString("HClient does not support Anime.", comment: ""), preferredStyle: .alert)
+                        let action = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .default, handler: nil)
+                        alert.addAction(action)
+                        self.present(alert, animated: true, completion: nil)
+                        self.activityController.isHidden = true
+                        self.activityController.stopAnimating()
+                        overlay.removeFromSuperview()
+                    }
+                }
+                else {
+                    let title1 = str?.components(separatedBy: "</a></h1>")[0]
+                    let title2 = title1?.components(separatedBy: "<h1>")[3].components(separatedBy: ".html\">")[1]
+                    let artist1 = str?.components(separatedBy: "</h2>")[0].components(separatedBy: "<h2>")[1]
+                    var artist = NSLocalizedString("Artist: ", comment: "")
+                    let artistlist = artist1?.components(separatedBy: "</a></li>")
+                    if (artist1?.contains("N/A"))! {
+                        artist.append("N/A")
+                    }
+                    else {
+                        for i in 0...(artistlist?.count)!-2 {
+                            artist.append(Strings.decode(artistlist?[i].components(separatedBy: ".html\">")[1]))
+                            if i != (artistlist?.count)! - 2 {
+                                artist.append(", ")
+                            }
+                        }
+                    }
+                    var language = NSLocalizedString("Language: ", comment: "")
+                    let lang = str?.components(separatedBy: "Language")[1].components(separatedBy: "</a></td>")[0]
+                    if (lang?.contains("N/A"))! {
+                        language.append("N/A")
+                    }
+                    else {
+                        language.append(Strings.decode(lang?.components(separatedBy: ".html\">")[1]))
+                    }
+                    var series = NSLocalizedString("Series: ", comment: "")
+                    let series1 = str?.components(separatedBy: "Series")[1].components(separatedBy: "</td>")[1]
+                    let series2 = series1?.components(separatedBy: "</a></li>")
+                    if (series1?.contains("N/A"))! {
+                        series.append("N/A")
+                    }
+                    else {
+                        for i in 0...(series2?.count)!-2 {
+                            series.append(Strings.decode(series2?[i].components(separatedBy: ".html\">")[1]))
+                            if i != (series2?.count)! - 2 {
+                                series.append(", ")
+                            }
+                        }
+                    }
+                    var tags = NSLocalizedString("Tags: ", comment: "")
+                    let tags1 = str?.components(separatedBy: "Tags")[1].components(separatedBy: "</td>")[1]
+                    let tags2 = tags1?.components(separatedBy: "</a></li>")
+                    if tags2?.count == 1 {
+                        tags.append("N/A")
+                    }
+                    else {
+                        for i in 0...(tags2?.count)!-2 {
+                            tags.append(Strings.decode(tags2?[i].components(separatedBy: ".html\">")[1]))
+                            if i != (tags2?.count)! - 2 {
+                                tags.append(", ")
+                            }
+                        }
+                    }
+                    let pic = str?.components(separatedBy: ".html\"><img src=\"")[1].components(separatedBy: "\"></a></div>")[0]
+                    let picurl = "https:\(pic!)"
+                    self.numberDic["title"] = Strings.decode(title2)
+                    self.numberDic["artist"] = artist
+                    self.numberDic["language"] = language
+                    self.numberDic["series"] = series
+                    self.numberDic["tag"] = tags
+                    self.arr2.append(picurl)
+                    self.arr3.append(NSNull())
+                    DispatchQueue.main.async {
+                        UIApplication.shared.isNetworkActivityIndicatorVisible = false
+                        self.tableView.reloadData()
+                        self.activityController.isHidden = true
+                        self.activityController.stopAnimating()
+                        overlay.removeFromSuperview()
+                        self.pages = true
+                    }
+                }
+            }
+            else if error == nil && (response as! HTTPURLResponse).statusCode != 200 {
+                DispatchQueue.main.async {
+                    self.activityController.isHidden = true
+                    self.activityController.stopAnimating()
+                    overlay.removeFromSuperview()
+                    self.pages = true
+                    OperationQueue.main.addOperation {
+                        UIApplication.shared.isNetworkActivityIndicatorVisible = false
+                        let alert = UIAlertController(title: String(format:NSLocalizedString("Could not find number %ld.", comment: ""),numb!), message: nil, preferredStyle: .alert)
+                        let action = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .default, handler: nil)
+                        alert.addAction(action)
+                        self.present(alert, animated: true, completion: nil)
+                        self.activityController.isHidden = true
+                        self.activityController.stopAnimating()
+                        overlay.removeFromSuperview()
+                    }
+                }
+            }
+            else {
+                OperationQueue.main.addOperation {
+                    UIApplication.shared.isNetworkActivityIndicatorVisible = false
+                    let alert = UIAlertController(title: NSLocalizedString("Error Occured.", comment: ""), message: error?.localizedDescription, preferredStyle: .alert)
+                    let action = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .default, handler: nil)
+                    alert.addAction(action)
+                    self.present(alert, animated: true, completion: nil)
+                    self.activityController.isHidden = true
+                    self.activityController.stopAnimating()
+                    overlay.removeFromSuperview()
+                }
+            }
+        }
+        task.resume()
+        self.tableView.reloadData()
+    }
+    
+    @IBAction func Action(_ sender: Any) {
+        var url:URL
+        if !numbered {
+            var taga = tag
+            taga = taga.replacingOccurrences(of: " ", with: "%20")
+            if type == "male" || type == "female" {
+                url = URL(string: "https://hitomi.la/tag/\(taga):\(taga)-all-1.html")!
+            }
+            else {
+                url = URL(string: "https://hitomi.la/\(type)/\(taga)-all-1.html")!
+            }
+        }
+        else {
+            let numb = Int(hitomiNumber)
+            url = URL(string: "https://hitomi.la/galleries/\(numb!).html")!
+        }
+        let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let activity = UIAlertAction(title: NSLocalizedString("Share URL", comment: ""), style: .default) { (_) in
+            let activitys = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+            activitys.popoverPresentationController?.barButtonItem = self.navigationItem.rightBarButtonItem
+            self.present(activitys, animated: true, completion: nil)
+        }
+        let open = UIAlertAction(title: NSLocalizedString("Open in Safari", comment: ""), style: .default) { (_) in
+            let safari = SFSafariViewController(url: url)
+            if #available(iOS 10.0, *) {
+                safari.preferredBarTintColor = UIColor(hue: 235.0/360.0, saturation: 0.77, brightness: 0.47, alpha: 1.0)
+            }
+            self.present(safari, animated: true, completion: nil)
+        }
+        let favorites = UserDefaults.standard
+        var favoriteslist:[String]
+        var bookmark:UIAlertAction
+        if !numbered {
+            if let a = favorites.array(forKey: "favoritesKey") as? [String] {
+                favoriteslist = a
+            }
+            else {
+                favoriteslist = []
+            }
+            if !(favoriteslist.contains {$0 == "\(type):\(tag)"}) {
+                bookmark = UIAlertAction(title: NSLocalizedString("Add to favorites", comment: ""), style: .default, handler: { (_) in
+                    favoriteslist.append("\(self.type):\(self.tag)")
+                    favorites.set(favoriteslist, forKey: "favoritesKey")
+                    favorites.synchronize()
+                })
+            }
+            else {
+                bookmark = UIAlertAction(title: NSLocalizedString("Remove from favorites", comment: ""), style: .default, handler: { (_) in
+                    if let index = favoriteslist.index(of: "\(self.type):\(self.tag)") {
+                        favoriteslist.remove(at: index)
+                        favorites.set(favoriteslist, forKey: "favoritesKey")
+                        favorites.synchronize()
+                    }
+                })
+            }
+        }
+        else {
+            let numb = Int(hitomiNumber)
+            if let a = favorites.array(forKey: "favorites") as? [String] {
+                favoriteslist = a
+            }
+            else {
+                favoriteslist = []
+            }
+            if !(favoriteslist.contains {$0 == "https://hitomi.la/galleries/\(numb!).html"}) {
+                bookmark = UIAlertAction(title: NSLocalizedString("Add to favorites", comment: ""), style: .default, handler: { (_) in
+                    favoriteslist.append("https://hitomi.la/galleries/\(numb!).html")
+                    favorites.set(favoriteslist, forKey: "favorites")
+                    favorites.synchronize()
+                })
+            }
+            else {
+                bookmark = UIAlertAction(title: NSLocalizedString("Remove from favorites", comment: ""), style: .default, handler: { (_) in
+                    if let index = favoriteslist.index(of: "https://hitomi.la/galleries/\(numb!).html") {
+                        favoriteslist.remove(at: index)
+                        favorites.set(favoriteslist, forKey: "favorites")
+                        favorites.synchronize()
+                    }
+                })
+            }
+
+        }
+        let cancel = UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel, handler: nil)
+        sheet.addAction(activity)
+        sheet.addAction(open)
+        sheet.addAction(bookmark)
+        sheet.addAction(cancel)
+        sheet.popoverPresentationController?.barButtonItem = self.navigationItem.rightBarButtonItem
+        self.present(sheet, animated: true, completion: nil)
+    }
+    
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
+        let cellPosition = self.tableView.convert(location, to: self.view)
+        let path = self.tableView.indexPathForRow(at: cellPosition)
+        var djURL = ""
+        if path != nil {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let segued:InfoDetail = storyboard.instantiateViewController(withIdentifier: "io.github.mario-kang.HClient.infodetail") as! InfoDetail
+            if !numbered {
+                let title1 = arr[(path?.row)!]
+                let title2 = (title1 as! String).components(separatedBy: ".html\">")[0]
+                let title3 = title2.components(separatedBy: "<a href=\"")[1]
+                djURL = "https://hitomi.la\(title3).html"
+            }
+            else {
+                let numb = Int(hitomiNumber)
+                djURL = "https://hitomi.la/galleries/\(numb!).html"
+            }
+            segued.URL1 = djURL
+            return segued
+        }
+        return nil
+    }
+    
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
+        self.navigationController?.show(viewControllerToCommit, sender: nil)
+    }
+    
+    override var previewActionItems: [UIPreviewActionItem] {
+        var url:URL
+        if !numbered {
+            var taga = tag
+            taga = taga.replacingOccurrences(of: " ", with: "%20")
+            if type == "male" || type == "female" {
+                url = URL(string: "https://hitomi.la/tag/\(self.type):\(taga)-all-1.html")!
+            }
+            else {
+                url = URL(string: "https://hitomi.la/\(self.type)/\(taga)-all-1.html")!
+            }
+        }
+        else {
+            let numb = Int(hitomiNumber)
+            url = URL(string: "https://hitomi.la/galleries/\(numb!).html")!
+        }
+        let share = UIPreviewAction(title: NSLocalizedString("Share URL", comment: ""), style: .default) { (_, _) in
+            let activitys = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+            activitys.popoverPresentationController?.barButtonItem = self.navigationItem.rightBarButtonItem
+            UIApplication.shared.delegate?.window??.rootViewController?.present(activitys, animated: true, completion: nil)
+        }
+        let open = UIPreviewAction(title: NSLocalizedString("Open in Safari", comment: ""), style: .default) { (_, _) in
+            let safari = SFSafariViewController(url: url)
+            if #available(iOS 10.0, *) {
+                safari.preferredBarTintColor = UIColor(hue: 235.0/360.0, saturation: 0.77, brightness: 0.47, alpha: 1.0)
+            }
+            UIApplication.shared.delegate?.window??.rootViewController?.present(safari, animated: true, completion: nil)
+        }
+        return [share,open]
+    }
+    
+}

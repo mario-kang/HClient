@@ -1,0 +1,27 @@
+
+/* Class = "UILabel"; text = "Main Page"; ObjectID = "6mh-z3-n09"; */
+"6mh-z3-n09.text" = "Main Page";
+
+/* Class = "UISearchBar"; placeholder = "Search Tags or Number"; ObjectID = "FIa-7N-FkC"; */
+"FIa-7N-FkC.placeholder" = "Search Tags or Number";
+
+/* Class = "UINavigationItem"; title = "Search"; ObjectID = "IPA-q0-K2a"; */
+"IPA-q0-K2a.title" = "Search";
+
+/* Class = "UILabel"; text = "Search"; ObjectID = "OAo-HZ-1oa"; */
+"OAo-HZ-1oa.text" = "Search";
+
+/* Class = "UINavigationItem"; title = "HClient"; ObjectID = "aPk-pV-fgP"; */
+"aPk-pV-fgP.title" = "HClient";
+
+/* Class = "UINavigationItem"; title = "Favorites"; ObjectID = "kdl-zc-x96"; */
+"kdl-zc-x96.title" = "Favorites";
+
+/* Class = "UINavigationItem"; title = "Search"; ObjectID = "qP9-Hf-eZ1"; */
+"qP9-Hf-eZ1.title" = "Search";
+
+/* Class = "UINavigationItem"; title = "Menu"; ObjectID = "sMs-d6-qM9"; */
+"sMs-d6-qM9.title" = "Menu";
+
+/* Class = "UILabel"; text = "Favorites"; ObjectID = "xAo-ug-v8C"; */
+"xAo-ug-v8C.text" = "Favorites";
