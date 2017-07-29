@@ -63,7 +63,7 @@ class FavoritesView: UITableViewController, UIViewControllerPreviewingDelegate {
                 UIApplication.shared.isNetworkActivityIndicatorVisible = true
                 let url = URL(string: self.favoriteslist[a] as! String)
                 let session = URLSession.shared
-                let request = URLRequest(url: url!, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 60.0)
+                let request = URLRequest(url: url!, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 60.0)
                 let task = session.dataTask(with: request, completionHandler: { (data, _, error) in
                     if error == nil {
                         let str = String(data: data!, encoding:.utf8)
@@ -148,6 +148,9 @@ class FavoritesView: UITableViewController, UIViewControllerPreviewingDelegate {
                             let action = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .default, handler: nil)
                             alert.addAction(action)
                             self.present(alert, animated: true, completion: nil)
+                            self.activityController.isHidden = true
+                            self.activityController.stopAnimating()
+                            overlay.removeFromSuperview()
                         }
                     }
                 })
@@ -212,7 +215,7 @@ class FavoritesView: UITableViewController, UIViewControllerPreviewingDelegate {
                 }
                 if !(celllist.contains(where: {$0 == "\(indexPath.row)"})) && pics == favoriteslist.count - 1 {
                     UIApplication.shared.isNetworkActivityIndicatorVisible = true
-                    let request = URLRequest(url: URL(string:picURLs[indexPath.row])!, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 60.0)
+                    let request = URLRequest(url: URL(string:picURLs[indexPath.row])!, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 60.0)
                     let sessionTask = session.dataTask(with: request, completionHandler: { (data, _, error) in
                         if error == nil {
                             let image = UIImage(data: data!)

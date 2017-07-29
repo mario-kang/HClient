@@ -16,22 +16,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
         let item1 = UIApplicationShortcutItem(type: "io.github.mario-kang.HClient.news", localizedTitle: NSLocalizedString("New", comment: ""), localizedSubtitle: nil, icon:UIApplicationShortcutIcon.init(templateImageName: "mainmenu"), userInfo: nil)
-        let item2 = UIApplicationShortcutItem(type: "io.github.mario-kang.HClient.search", localizedTitle: NSLocalizedString("Search", comment: ""), localizedSubtitle: nil, icon:UIApplicationShortcutIcon.init(templateImageName: "Search"), userInfo: nil)
+        let item2 = UIApplicationShortcutItem(type: "io.github.mario-kang.HClient.search", localizedTitle: NSLocalizedString("Search", comment: ""), localizedSubtitle: nil, icon:UIApplicationShortcutIcon.init(templateImageName: "search"), userInfo: nil)
         let item3 = UIApplicationShortcutItem(type: "io.github.mario-kang.HClient.favorites", localizedTitle: NSLocalizedString("Favorites", comment: ""), localizedSubtitle: nil, icon:UIApplicationShortcutIcon.init(templateImageName: "favorite"), userInfo: nil)
         UIApplication.shared.shortcutItems = [item1, item2, item3]
-        URLCache.shared.removeAllCachedResponses()
-        URLCache.shared.diskCapacity = 0
-        URLCache.shared.memoryCapacity = 0
-        let dataType = NSSet(array: [WKWebsiteDataTypeDiskCache,WKWebsiteDataTypeMemoryCache])
+        let type = Set([WKWebsiteDataTypeDiskCache])
         let date = Date(timeIntervalSince1970: 0)
-        WKWebsiteDataStore.default().removeData(ofTypes: dataType as! Set<String>, modifiedSince: date) { }
+        WKWebsiteDataStore.default().removeData(ofTypes: type, modifiedSince: date) { }
         return true
     }
     
     func applicationDidEnterBackground(_ application: UIApplication) {
-        let dataType = NSSet(array: [WKWebsiteDataTypeDiskCache,WKWebsiteDataTypeMemoryCache])
+        let type = Set([WKWebsiteDataTypeDiskCache])
         let date = Date(timeIntervalSince1970: 0)
-        WKWebsiteDataStore.default().removeData(ofTypes: dataType as! Set<String>, modifiedSince: date) { }
+        WKWebsiteDataStore.default().removeData(ofTypes: type, modifiedSince: date) { }
     }
     
     func application(_ application: UIApplication, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {

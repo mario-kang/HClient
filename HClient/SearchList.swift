@@ -10,9 +10,20 @@ import UIKit
 
 class SearchList: UITableViewController, UISearchBarDelegate,UIViewControllerPreviewingDelegate {
     
+    struct List {
+        let name:String
+        let type:String
+        let count:Int
+        init(name:String,type:String,count:Int) {
+            self.name = name
+            self.type = type
+            self.count = count
+        }
+    }
+    
     @IBOutlet weak var Search: UISearchBar!
-    var allList:[[String:String]] = []
-    var allList2:[[String:String]] = []
+    var allList:[List] = []
+    var allList2:[List] = []
     var activityController:UIActivityIndicatorView!
     var searchWord = ""
     var previewingContext:Any!
@@ -50,7 +61,7 @@ class SearchList: UITableViewController, UISearchBarDelegate,UIViewControllerPre
         Search.delegate = self
         Search.isUserInteractionEnabled = false
         let url = URL(string: urlString)
-        let request = URLRequest(url: url!, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 60.0)
+        let request = URLRequest(url: url!, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 60.0)
         let session = URLSession.shared
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
         let sessionTask = session.dataTask(with: request) { (data1, _, error1) in
@@ -65,9 +76,9 @@ class SearchList: UITableViewController, UISearchBarDelegate,UIViewControllerPre
                     self.addAll("group", list: JSONList!)
                     self.addAll("character", list: JSONList!)
                     self.addAll("language", list: JSONList!)
-                    let sortDescriptor = NSSortDescriptor(key: "count", ascending: false)
-                    let sortDescriptor2 = NSSortDescriptor(key: "name", ascending: true)
-                    self.allList = (self.allList as! NSMutableArray).sortedArray(using: [sortDescriptor,sortDescriptor2]) as! [[String:String]]
+                    self.allList.sort {(a,b) in
+                        return a.count > b.count
+                    }
                     DispatchQueue.main.async {
                         UIApplication.shared.isNetworkActivityIndicatorVisible = false
                         self.Search.isUserInteractionEnabled = true
@@ -99,15 +110,11 @@ class SearchList: UITableViewController, UISearchBarDelegate,UIViewControllerPre
     func addAll(_ type:String, list:[String:AnyObject]) {
         var name = ""
         var count:Int
-        var dic:[String:String] = [:]
         var b = list[type] as? [AnyObject]
         for a in b! {
             name = a["s"]! as! String
             count = a["t"]! as! Int
-            dic["name"] = name
-            dic["count"] = String(format: "%06d", count)
-            dic["type"] = type
-            allList.append(dic)
+            allList.append(List(name: name, type: type, count: count))
         }
         b = nil
     }
@@ -117,67 +124,19 @@ class SearchList: UITableViewController, UISearchBarDelegate,UIViewControllerPre
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        var predicate:NSPredicate
         searchWord = searchText
-        if searchText.lowercased().hasPrefix("tag:") {
-            if !(searchText.lowercased() == "tag:") {
-                let index = searchText.index(searchText.startIndex, offsetBy: 4)
-                predicate = NSPredicate(format: "name CONTAINS %@ AND type LIKE 'tag'", searchText.lowercased().substring(from: index))
-                allList2 = allList.filter {a in predicate.evaluate(with: a)}
-            }
-        }
-        else if searchText.lowercased().hasPrefix("artist:") {
-            if !(searchText.lowercased() == "artist:") {
-                let index = searchText.index(searchText.startIndex, offsetBy: 7)
-                predicate = NSPredicate(format: "name CONTAINS %@ AND type LIKE 'artist'", searchText.lowercased().substring(from: index))
-                allList2 = allList.filter {a in predicate.evaluate(with: a)}
-            }
-        }
-        else if searchText.lowercased().hasPrefix("male:") {
-            if !(searchText.lowercased() == "male:") {
-                let index = searchText.index(searchText.startIndex, offsetBy: 5)
-                predicate = NSPredicate(format: "name CONTAINS %@ AND type LIKE 'male'", searchText.lowercased().substring(from: index))
-                allList2 = allList.filter {a in predicate.evaluate(with: a)}
-            }
-        }
-        else if searchText.lowercased().hasPrefix("female:") {
-            if !(searchText.lowercased() == "female:") {
-                let index = searchText.index(searchText.startIndex, offsetBy: 7)
-                predicate = NSPredicate(format: "name CONTAINS %@ AND type LIKE 'female'", searchText.lowercased().substring(from: index))
-                allList2 = allList.filter {a in predicate.evaluate(with: a)}
-            }
-        }
-        else if searchText.lowercased().hasPrefix("series:") {
-            if !(searchText.lowercased() == "series:") {
-                let index = searchText.index(searchText.startIndex, offsetBy: 7)
-                predicate = NSPredicate(format: "name CONTAINS %@ AND type LIKE 'series'", searchText.lowercased().substring(from: index))
-                allList2 = allList.filter {a in predicate.evaluate(with: a)}
-            }
-        }
-        else if searchText.lowercased().hasPrefix("group:") {
-            if !(searchText.lowercased() == "group:") {
-                let index = searchText.index(searchText.startIndex, offsetBy: 6)
-                predicate = NSPredicate(format: "name CONTAINS %@ AND type LIKE 'group'", searchText.lowercased().substring(from: index))
-                allList2 = allList.filter {a in predicate.evaluate(with: a)}
-            }
-        }
-        else if searchText.lowercased().hasPrefix("character:") {
-            if !(searchText.lowercased() == "character:") {
-                let index = searchText.index(searchText.startIndex, offsetBy: 10)
-                predicate = NSPredicate(format: "name CONTAINS %@ AND type LIKE 'character'", searchText.lowercased().substring(from: index))
-                allList2 = allList.filter {a in predicate.evaluate(with: a)}
-            }
-        }
-        else if searchText.lowercased().hasPrefix("language:") {
-            if !(searchText.lowercased() == "langauage:") {
-                let index = searchText.index(searchText.startIndex, offsetBy: 10)
-                predicate = NSPredicate(format: "name CONTAINS %@ AND type LIKE 'language'", searchText.lowercased().substring(from: index))
-                allList2 = allList.filter {a in predicate.evaluate(with: a)}
+        let regex = "([a-z])*:([a-z ])*"
+        let predicateRegex = NSPredicate(format: "SELF MATCHES %@", regex)
+        if predicateRegex.evaluate(with: searchText.lowercased()) {
+            let ind = searchText.lowercased().components(separatedBy: ":")
+            if ind[1] != "" {
+                allList2 = allList.filter {a in
+                return a.name.contains(ind[1]) && a.type == ind[0]}
             }
         }
         else {
-            predicate = NSPredicate(format: "name CONTAINS %@", searchText.lowercased())
-            allList2 = allList.filter {a in predicate.evaluate(with: a)}
+            allList2 = allList.filter {a in
+            a.name.contains(searchText.lowercased())}
         }
         self.tableView.reloadData()
     }
@@ -208,8 +167,8 @@ class SearchList: UITableViewController, UISearchBarDelegate,UIViewControllerPre
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "list", for: indexPath)
-            cell.textLabel?.text = allList2[indexPath.row]["name"]
-            let a = String(format: NSLocalizedString("%@, %ld item(s)",comment:""), allList2[indexPath.row]["type"]!,Int(allList2[indexPath.row]["count"]!)!)
+            cell.textLabel?.text = allList2[indexPath.row].name
+            let a = String(format: NSLocalizedString("%@, %ld item(s)",comment:""), allList2[indexPath.row].type,allList2[indexPath.row].count)
             cell.detailTextLabel?.text = a
             return cell
         }
@@ -229,8 +188,8 @@ class SearchList: UITableViewController, UISearchBarDelegate,UIViewControllerPre
         let segued:SearchView = segue.destination as! SearchView
         if segue.identifier == "search" {
             let indexPath = self.tableView.indexPathForSelectedRow
-            segued.tag = allList2[(indexPath?.row)!]["name"]!
-            segued.type = allList2[(indexPath?.row)!]["type"]!
+            segued.tag = allList2[(indexPath?.row)!].name
+            segued.type = allList2[(indexPath?.row)!].type
             segued.numbered = false
         }
         else {
@@ -247,8 +206,8 @@ class SearchList: UITableViewController, UISearchBarDelegate,UIViewControllerPre
             let storyBoard = UIStoryboard(name: "Main", bundle: nil)
             let segued:SearchView = storyBoard.instantiateViewController(withIdentifier: "io.github.mario-kang.HClient.searchview") as! SearchView
             if cell?.reuseIdentifier == "list" {
-                segued.tag = allList2[(path?.row)!]["name"]!
-                segued.type = allList2[(path?.row)!]["type"]!
+                segued.tag = allList2[(path?.row)!].name
+                segued.type = allList2[(path?.row)!].type
                 segued.numbered = false
             }
             else {

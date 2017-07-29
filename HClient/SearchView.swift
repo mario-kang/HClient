@@ -18,7 +18,7 @@ class SearchCell: UITableViewCell {
     @IBOutlet weak var DJArtist: UILabel!
 }
 
-class SearchView: UITableViewController, UIViewControllerPreviewingDelegate {
+class SearchView: UITableViewController, UIViewControllerPreviewingDelegate, UIPickerViewDelegate {
     
     var activityController:UIActivityIndicatorView!
     var type = ""
@@ -33,6 +33,7 @@ class SearchView: UITableViewController, UIViewControllerPreviewingDelegate {
     var numbered = false
     var page:UInt = 0
     var previewingContext:Any?
+    var langIndex = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,7 +54,7 @@ class SearchView: UITableViewController, UIViewControllerPreviewingDelegate {
         }
         page = 1
         if !numbered {
-            downloadTask(page)
+            downloadTask(page, langindex:langIndex)
         }
         else {
             downloadNumber()
@@ -127,7 +128,7 @@ class SearchView: UITableViewController, UIViewControllerPreviewingDelegate {
                 }
             }
             let session = URLSession.shared
-            let request = URLRequest(url: URL(string:arr2[indexPath.row] as! String)!, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 60.0)
+            let request = URLRequest(url: URL(string:arr2[indexPath.row] as! String)!, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 60.0)
             if arr3[indexPath.row] is UIImage {
                 cell.DJImage.image = arr3[indexPath.row] as? UIImage
             }
@@ -167,7 +168,7 @@ class SearchView: UITableViewController, UIViewControllerPreviewingDelegate {
             cell.DJLang.text = Strings.decode(numberDic["language"])
             cell.DJTag.text = Strings.decode(numberDic["tag"])
             let session = URLSession.shared
-            let request = URLRequest(url: URL(string:arr2[indexPath.row] as! String)!, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 60.0)
+            let request = URLRequest(url: URL(string:arr2[indexPath.row] as! String)!, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 60.0)
             if arr3[indexPath.row] is UIImage {
                 cell.DJImage.image = arr3[indexPath.row] as? UIImage
             }
@@ -198,7 +199,7 @@ class SearchView: UITableViewController, UIViewControllerPreviewingDelegate {
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row + 1 == arr2.count && !pages && !numbered {
             page += 1
-            downloadTask(page)
+            downloadTask(page, langindex:langIndex)
             pages = true
         }
     }
@@ -219,7 +220,7 @@ class SearchView: UITableViewController, UIViewControllerPreviewingDelegate {
         segued.URL1 = djURL
     }
     
-    func downloadTask(_ ind:UInt) {
+    func downloadTask(_ ind:UInt, langindex:Int) {
         var overlay:UIView
         if self.splitViewController != nil {
             overlay = UIView(frame: (self.splitViewController?.view.frame)!)
@@ -241,18 +242,48 @@ class SearchView: UITableViewController, UIViewControllerPreviewingDelegate {
         var taga = tag
         taga = taga.replacingOccurrences(of: " ", with: "%20")
         var url:URL
-        if type == "male" || type == "female" {
-            url = URL(string: "https://hitomi.la/tag/\(type):\(taga)-all-\(ind).html")!
-        }
-        else if type == "language" {
-            url = URL(string: "https://hitomi.la/index-\(taga)-\(ind).html")!
+        if let path = Bundle.main.path(forResource: "Language", ofType: "plist") {
+            if let array = NSArray(contentsOfFile: path) as? [[String:String]] {
+                let sortDescriptor = NSSortDescriptor(key: "s", ascending: true)
+                var array2 = (array as! NSMutableArray).sortedArray(using: [sortDescriptor]) as! [[String:String]]
+                array2.insert(["t":"all"], at: 0)
+                let str:String! = array2[langindex]["t"]
+                if type == "male" || type == "female" {
+                    url = URL(string: "https://hitomi.la/tag/\(type):\(taga)-\(str!)-\(ind).html")!
+                }
+                else if type == "language" {
+                    url = URL(string: "https://hitomi.la/index-\(taga)-\(ind).html")!
+                }
+                else {
+                    url = URL(string: "https://hitomi.la/\(type)/\(taga)-\(str!)-\(ind).html")!
+                }
+            }
+            else {
+                if type == "male" || type == "female" {
+                    url = URL(string: "https://hitomi.la/tag/\(type):\(taga)-all-\(ind).html")!
+                }
+                else if type == "language" {
+                    url = URL(string: "https://hitomi.la/index-\(taga)-\(ind).html")!
+                }
+                else {
+                    url = URL(string: "https://hitomi.la/\(type)/\(taga)-all-\(ind).html")!
+                }
+            }
         }
         else {
-            url = URL(string: "https://hitomi.la/\(type)/\(taga)-all-\(ind).html")!
+            if type == "male" || type == "female" {
+                url = URL(string: "https://hitomi.la/tag/\(type):\(taga)-all-\(ind).html")!
+            }
+            else if type == "language" {
+                url = URL(string: "https://hitomi.la/index-\(taga)-\(ind).html")!
+            }
+            else {
+                url = URL(string: "https://hitomi.la/\(type)/\(taga)-all-\(ind).html")!
+            }
         }
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
         let session = URLSession.shared
-        let request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 60.0)
+        let request = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 60.0)
         let task = session.dataTask(with: request) { (data, response, error) in
             if error == nil && (response as! HTTPURLResponse).statusCode == 200 {
                 var str = String(data:data!, encoding:.utf8)
@@ -325,7 +356,7 @@ class SearchView: UITableViewController, UIViewControllerPreviewingDelegate {
         let url = URL(string: "https://hitomi.la/galleries/\(numb!).html")
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
         let session = URLSession.shared
-        let request = URLRequest(url: url!, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 60.0)
+        let request = URLRequest(url: url!, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 60.0)
         let task = session.dataTask(with: request) { (data, response, error) in
             if error == nil && (response as! HTTPURLResponse).statusCode == 200 {
                 let str = String(data: data!, encoding: .utf8)
@@ -454,12 +485,46 @@ class SearchView: UITableViewController, UIViewControllerPreviewingDelegate {
         if !numbered {
             var taga = tag
             taga = taga.replacingOccurrences(of: " ", with: "%20")
-            if type == "male" || type == "female" {
-                url = URL(string: "https://hitomi.la/tag/\(taga):\(taga)-all-1.html")!
+            if let path = Bundle.main.path(forResource: "Language", ofType: "plist") {
+                if let array = NSArray(contentsOfFile: path) as? [[String:String]] {
+                    let sortDescriptor = NSSortDescriptor(key: "s", ascending: true)
+                    var array2 = (array as! NSMutableArray).sortedArray(using: [sortDescriptor]) as! [[String:String]]
+                    array2.insert(["t":"all"], at: 0)
+                    let str:String! = array2[self.langIndex]["t"]
+                    if type == "male" || type == "female" {
+                        url = URL(string: "https://hitomi.la/tag/\(type):\(taga)-\(str!).html")!
+                    }
+                    else if type == "language" {
+                        url = URL(string: "https://hitomi.la/index-\(taga).html")!
+                    }
+                    else {
+                        url = URL(string: "https://hitomi.la/\(type)/\(taga)-\(str!).html")!
+                    }
+                }
+                else {
+                    if type == "male" || type == "female" {
+                        url = URL(string: "https://hitomi.la/tag/\(type):\(taga)-all.html")!
+                    }
+                    else if type == "language" {
+                        url = URL(string: "https://hitomi.la/index-\(taga).html")!
+                    }
+                    else {
+                        url = URL(string: "https://hitomi.la/\(type)/\(taga)-all.html")!
+                    }
+                }
             }
             else {
-                url = URL(string: "https://hitomi.la/\(type)/\(taga)-all-1.html")!
+                if type == "male" || type == "female" {
+                    url = URL(string: "https://hitomi.la/tag/\(type):\(taga)-all.html")!
+                }
+                else if type == "language" {
+                    url = URL(string: "https://hitomi.la/index-\(taga).html")!
+                }
+                else {
+                    url = URL(string: "https://hitomi.la/\(type)/\(taga)-all.html")!
+                }
             }
+
         }
         else {
             let numb = Int(hitomiNumber)
@@ -534,10 +599,84 @@ class SearchView: UITableViewController, UIViewControllerPreviewingDelegate {
         let cancel = UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel, handler: nil)
         sheet.addAction(activity)
         sheet.addAction(open)
+        if !numbered && type != "language" {
+            let lang = UIAlertAction(title: NSLocalizedString("Language", comment: ""), style: .default, handler: { (_) in
+                let langAlert = UIAlertController(title: NSLocalizedString("Select the language.\n\n\n\n\n\n\n\n", comment: ""), message: nil, preferredStyle: .actionSheet)
+                var frame:CGRect
+                if UIDevice.current.userInterfaceIdiom == .phone && (UIDevice.current.orientation == .landscapeLeft || UIDevice.current.orientation == .landscapeRight) {
+                    frame = CGRect(x: langAlert.view.bounds.size.height/2-145, y: 52, width: 270, height: 150)
+                }
+                else if UIDevice.current.userInterfaceIdiom == .phone {
+                    frame = CGRect(x: langAlert.view.bounds.size.width/2-145, y: 52, width: 270, height: 150)
+                }
+                else {
+                    frame = CGRect(x: 17, y: 52, width: 270, height: 150)
+                }
+                let picker = UIPickerView(frame: frame)
+                picker.delegate = self
+                picker.selectRow(self.langIndex, inComponent: 0, animated: true)
+                langAlert.view.addSubview(picker)
+                let langOK = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .default, handler: { (_) in
+                    if let path = Bundle.main.path(forResource: "Language", ofType: "plist") {
+                        if let array = NSArray(contentsOfFile: path) as? [[String:String]] {
+                            let sortDescriptor = NSSortDescriptor(key: "s", ascending: true)
+                            var array2 = (array as! NSMutableArray).sortedArray(using: [sortDescriptor]) as! [[String:String]]
+                            array2.insert(["t":"all"], at: 0)
+                            self.langIndex = picker.selectedRow(inComponent: 0)
+                            self.arr = []
+                            self.arr2 = []
+                            self.arr3 = []
+                            self.celllist = []
+                            self.page = 1
+                            self.pages = false
+                            self.numberDic = [:]
+                            self.downloadTask(self.page, langindex: self.langIndex)
+                        }
+                    }
+                })
+                let langCancel = UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel, handler: nil)
+                langAlert.popoverPresentationController?.barButtonItem = self.navigationItem.rightBarButtonItem
+                langAlert.addAction(langOK)
+                langAlert.addAction(langCancel)
+                self.present(langAlert, animated: true, completion: nil)
+            })
+            sheet.addAction(lang)
+        }
         sheet.addAction(bookmark)
         sheet.addAction(cancel)
         sheet.popoverPresentationController?.barButtonItem = self.navigationItem.rightBarButtonItem
         self.present(sheet, animated: true, completion: nil)
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        if let path = Bundle.main.path(forResource: "Language", ofType: "plist") {
+            if let array = NSArray(contentsOfFile: path) as? [[String:String]] {
+                return array.count + 1
+            }
+            else {
+                return 0
+            }
+        }
+        else {
+            return 0
+        }
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        if let path = Bundle.main.path(forResource: "Language", ofType: "plist") {
+            if let array = NSArray(contentsOfFile: path) as? [[String:String]] {
+                let sortDescriptor = NSSortDescriptor(key: "s", ascending: true)
+                var array2 = (array as! NSMutableArray).sortedArray(using: [sortDescriptor]) as! [[String:String]]
+                array2.insert(["s":NSLocalizedString("All", comment: "")], at: 0)
+                return array2[row]["s"]
+            }
+            else {
+                return nil
+            }
+        }
+        else {
+            return nil
+        }
     }
     
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {

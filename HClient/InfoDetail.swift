@@ -50,7 +50,7 @@ class InfoDetail: UIViewController {
         let url = URL(string: URL1)
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
         let session = URLSession.shared
-        let request = URLRequest(url: url!, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 60.0)
+        let request = URLRequest(url: url!, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 60.0)
         let task = session.dataTask(with: request) { (data, response, error) in
             if error == nil && (response as! HTTPURLResponse).statusCode == 200 {
                 let str = String(data: data!, encoding: .utf8)
