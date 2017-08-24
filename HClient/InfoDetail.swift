@@ -87,7 +87,7 @@ class InfoDetail: UIViewController {
                     type.append(Strings.decode(type1?.components(separatedBy: ".html\">")[1].replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "CG", with: " CG").replacingOccurrences(of: "\n", with: "")))
                 }
                 var series = NSLocalizedString("Series: ", comment: "")
-                let series1 = str?.components(separatedBy: "Series")[1].components(separatedBy: "</td>")[1]
+                let series1 = str?.components(separatedBy: "<td>Series</td>")[1].components(separatedBy: "</ul>")[0]
                 let series2 = series1?.components(separatedBy: "</a></li>")
                 if (series1?.contains("N/A"))! {
                     series.append("N/A")

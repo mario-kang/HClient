@@ -14,16 +14,25 @@ class Viewer: UIViewController, WKNavigationDelegate {
     
     var URL1 = ""
     var web:WKWebView!
+    var progress:UIProgressView!
     
     override func loadView() {
         super.loadView()
         web = WKWebView()
         self.view = web
         web.navigationDelegate = self
+        progress = UIProgressView(progressViewStyle: .bar)
+        progress.translatesAutoresizingMaskIntoConstraints = false
+        web.addSubview(progress)
+        progress.leadingAnchor.constraint(equalTo: web.leadingAnchor).isActive = true
+        progress.trailingAnchor.constraint(equalTo: web.trailingAnchor).isActive = true
+        progress.bottomAnchor.constraint(equalTo: web.bottomAnchor).isActive = true
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        web.addObserver(self, forKeyPath: "estimatedProgress", options: .new, context: nil)
+        self.view.addSubview(progress)
         let viewerURL = "https://hitomi.la\(URL1)"
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
         let session = URLSession.shared
@@ -31,10 +40,13 @@ class Viewer: UIViewController, WKNavigationDelegate {
             if error == nil {
                 let str = String(data:data!, encoding:.utf8)
                 var HTMLString = "<!DOCTYPE HTML><style>img{width:100%;}</style>"
-                let list = str?.components(separatedBy: "<div class=\"img-url\">//g")
+                let list = str?.components(separatedBy: "<div class=\"img-url\">//")
                 for i in 0...(list?.count)!-2 {
                     let galleries:String = (list?[i+1].components(separatedBy: "</div>")[0])!
-                    HTMLString.append("<img src=\"https://ba\(galleries)\" >")
+                    let num = galleries.components(separatedBy: "/galleries/")[1].components(separatedBy: "/")[0]
+                    let numb = galleries.components(separatedBy: "/")[3]
+                    let a = String(UnicodeScalar(97 + Int(num)! % 2)!)
+                    HTMLString.append("<img src=\"https://\(a)a.hitomi.la/galleries/\(num)/\(numb)\" >")
                 }
                 DispatchQueue.main.async {
                     self.web.loadHTMLString(HTMLString, baseURL: nil)
@@ -54,6 +66,16 @@ class Viewer: UIViewController, WKNavigationDelegate {
         task.resume()
     }
     
+    deinit {
+        web.removeObserver(self, forKeyPath: "estimatedProgress")
+    }
+    
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == "estimatedProgress" {
+            progress.setProgress(Float(web.estimatedProgress), animated: true)
+        }
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         UIApplication.shared.isNetworkActivityIndicatorVisible = false
@@ -61,10 +83,12 @@ class Viewer: UIViewController, WKNavigationDelegate {
     
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
+        progress.isHidden = false
     }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         UIApplication.shared.isNetworkActivityIndicatorVisible = false
+        progress.isHidden = true
     }
     
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
@@ -73,6 +97,7 @@ class Viewer: UIViewController, WKNavigationDelegate {
         let action = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .default, handler: nil)
         alert.addAction(action)
         self.present(alert, animated: true, completion: nil)
+        progress.isHidden = true
     }
     
     @IBAction func Action(_ sender: Any) {

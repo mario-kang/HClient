@@ -41,7 +41,6 @@ class mainMenu: UITableViewController, UIViewControllerPreviewingDelegate {
         }
         page = 1
         downloadTask(page)
-
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {

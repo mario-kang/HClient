@@ -92,7 +92,7 @@ class FavoritesView: UITableViewController, UIViewControllerPreviewingDelegate {
                             language.append(Strings.decode(lang?.components(separatedBy: ".html\">")[1]))
                         }
                         var series = NSLocalizedString("Series: ", comment: "")
-                        let series1 = str?.components(separatedBy: "Series")[1].components(separatedBy: "</td>")[1]
+                        let series1 = str?.components(separatedBy: "<td>Series</td>")[1].components(separatedBy: "</ul>")[0]
                         let series2 = series1?.components(separatedBy: "</a></li>")
                         if (series1?.contains("N/A"))! {
                             series.append("N/A")
@@ -134,10 +134,10 @@ class FavoritesView: UITableViewController, UIViewControllerPreviewingDelegate {
                             UIApplication.shared.isNetworkActivityIndicatorVisible = false
                             if a == self.favoriteslist.count-1 {
                                 self.pics = a
-                                self.tableView.reloadData()
                                 self.activityController.isHidden = true
                                 self.activityController.stopAnimating()
                                 overlay.removeFromSuperview()
+                                self.tableView.reloadData()
                             }
                         }
                     }
@@ -155,7 +155,6 @@ class FavoritesView: UITableViewController, UIViewControllerPreviewingDelegate {
                     }
                 })
                 task.resume()
-                self.tableView.reloadData()
             }
         }
     }
@@ -204,32 +203,32 @@ class FavoritesView: UITableViewController, UIViewControllerPreviewingDelegate {
                 cell.DJSeries.text = a["series"]
                 cell.DJLang.text = a["language"]
                 cell.DJTag.text = a["tags"]
-            }
-            let session = URLSession.shared
-            if picURLs.count != 0 {
-                if arr3[indexPath.row] is UIImage {
-                    cell.DJImage.image = arr3[indexPath.row] as? UIImage
-                }
-                else {
-                    cell.DJImage.image = nil
-                }
-                if !(celllist.contains(where: {$0 == "\(indexPath.row)"})) && pics == favoriteslist.count - 1 {
-                    UIApplication.shared.isNetworkActivityIndicatorVisible = true
-                    let request = URLRequest(url: URL(string:picURLs[indexPath.row])!, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 60.0)
-                    let sessionTask = session.dataTask(with: request, completionHandler: { (data, _, error) in
-                        if error == nil {
-                            let image = UIImage(data: data!)
-                            self.arr3[indexPath.row] = image!
-                            DispatchQueue.main.async {
-                                UIApplication.shared.isNetworkActivityIndicatorVisible = false
-                                cell.DJImage.image = image
+                let session = URLSession.shared
+                if picURLs.count != 0 {
+                    if arr3[indexPath.row] is UIImage {
+                        cell.DJImage.image = arr3[indexPath.row] as? UIImage
+                    }
+                    else {
+                        cell.DJImage.image = nil
+                    }
+                    if !(celllist.contains(where: {$0 == "\(indexPath.row)"})) && pics == favoriteslist.count - 1 && favoriteslist.count == picURLs.count {
+                        UIApplication.shared.isNetworkActivityIndicatorVisible = true
+                        let request = URLRequest(url: URL(string:picURLs[indexPath.row])!, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 60.0)
+                        let sessionTask = session.dataTask(with: request, completionHandler: { (data, _, error) in
+                            if error == nil {
+                                let image = UIImage(data: data!)
+                                self.arr3[indexPath.row] = image!
+                                DispatchQueue.main.async {
+                                    UIApplication.shared.isNetworkActivityIndicatorVisible = false
+                                    cell.DJImage.image = image
+                                }
                             }
+                        })
+                        sessionTask.resume()
+                        if !(celllist.contains {$0 == "\(indexPath.row)"}) {
+                            celllist.append("\(indexPath.row)")
                         }
-                    })
-                    sessionTask.resume()
-                }
-                if !(celllist.contains {$0 == "\(indexPath.row)"}) {
-                    celllist.append("\(indexPath.row)")
+                    }
                 }
             }
             return cell

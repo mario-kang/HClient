@@ -192,8 +192,13 @@ class SearchList: UITableViewController, UISearchBarDelegate,UIViewControllerPre
             segued.type = allList2[(indexPath?.row)!].type
             segued.numbered = false
         }
-        else {
-            segued.hitomiNumber = searchWord
+        else if segue.identifier == "number" {
+            if let hitomiNumbers = Int(searchWord) {
+                segued.hitomiNumber = "\(hitomiNumbers)"
+            }
+            else {
+                segued.hitomiNumber = "0"
+            }
             segued.numbered = true
         }
     }
