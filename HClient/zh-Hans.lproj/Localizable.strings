@@ -53,10 +53,6 @@
 
 "Hitomi number %ld" = "Hitomi号码%ld";
 
-"This number is Anime." = "这个号码包含动漫。";
-
-"HClient does not support Anime." = "HClient不支持动漫。";
-
 "Share URL" = "共享URL";
 
 "Open in Viewer" = "在浏览器打开";
@@ -66,3 +62,5 @@
 "Select the language.\n\n\n\n\n\n\n\n" = "选择语言。\n\n\n\n\n\n\n\n";
 
 "All" = "全选";
+
+"Watch Anime" = "看动漫";

@@ -51,10 +51,6 @@
 
 "Hitomi number %ld" = "Hitomiナンバー%ld";
 
-"This number is Anime." = "このナンバーはアニメです。";
-
-"HClient does not support Anime." = "HClientはアニメをサポートしていません。";
-
 "Share URL" = "URLをシェア";
 
 "Open in Viewer" = "ビューアで開く";
@@ -64,3 +60,5 @@
 "Select the language.\n\n\n\n\n\n\n\n" = "言語を選択してください。\n\n\n\n\n\n\n\n";
 
 "All" = "全部";
+
+"Watch Anime" = "アニメを見る";

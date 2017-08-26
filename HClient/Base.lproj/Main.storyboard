@@ -740,7 +740,7 @@
                             </barButtonItem>
                             <barButtonItem systemItem="bookmarks" id="Sgu-mN-pdR">
                                 <connections>
-                                    <segue destination="Cu9-qG-dsm" kind="show" identifier="Viewer" id="Asz-23-0vc"/>
+                                    <action selector="viewerAction:" destination="ubt-We-9ck" id="vge-cN-rv5"/>
                                 </connections>
                             </barButtonItem>
                         </rightBarButtonItems>
@@ -790,7 +790,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hcN-Sj-fHh" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5082.3999999999996" y="-993.55322338830592"/>
+            <point key="canvasLocation" x="5084" y="-998"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="RUO-S1-7Zv">

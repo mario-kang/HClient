@@ -13,8 +13,9 @@ public class Strings: NSObject {
     static func replacingOccurrences(_ str:String!) -> String {
         var str1 = str
         str1 = str1!.replacingOccurrences(of: "\"acg", with: "\"dj")
-        str1 = str1!.replacingOccurrences(of: "\"acg", with: "\"dj")
-        str1 = str1!.replacingOccurrences(of: "\"acg", with: "\"dj")
+        str1 = str1!.replacingOccurrences(of: "\"cg", with: "\"dj")
+        str1 = str1!.replacingOccurrences(of: "\"anime", with: "\"dj")
+        str1 = str1!.replacingOccurrences(of: "\"manga", with: "\"dj")
         return str1!
     }
     
@@ -25,6 +26,7 @@ public class Strings: NSObject {
         str1 = str1!.replacingOccurrences(of: "&#39;", with: "'")
         str1 = str1!.replacingOccurrences(of: "&gt;", with: ">")
         str1 = str1!.replacingOccurrences(of: "&lt;", with: "<")
+        str1 = str1!.replacingOccurrences(of: "\\u002d", with: "-")
         return str1!
     }
     

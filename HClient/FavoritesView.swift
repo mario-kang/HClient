@@ -67,8 +67,18 @@ class FavoritesView: UITableViewController, UIViewControllerPreviewingDelegate {
                 let task = session.dataTask(with: request, completionHandler: { (data, _, error) in
                     if error == nil {
                         let str = String(data: data!, encoding:.utf8)
-                        let title1 = str?.components(separatedBy: "</a></h1>")[0]
-                        let title2 = title1?.components(separatedBy: "<h1>")[3].components(separatedBy: ".html\">")[1]
+                        let anime = (str?.components(separatedBy: "<td>Type</td><td>")[1].components(separatedBy: "</a></td>")[0])!
+                        var title:String
+                        var pic:String
+                        if (anime.contains("anime")) {
+                            title = (str?.components(separatedBy: "<h1>")[2].components(separatedBy: "</h1>")[0])!
+                            pic = (str?.components(separatedBy: "\"cover\"><img src=\"")[1].components(separatedBy: "\"></div>")[0])!
+                        }
+                        else {
+                            title = (str?.components(separatedBy: "</a></h1>")[0].components(separatedBy: "<h1>")[3].components(separatedBy: ".html\">")[1])!
+                            pic = (str?.components(separatedBy: ".html\"><img src=\"")[1].components(separatedBy: "\"></a></div>")[0])!
+                        }
+
                         let artist1 = str?.components(separatedBy: "</h2>")[0].components(separatedBy: "<h2>")[1]
                         var artist = NSLocalizedString("Artist: ", comment: "")
                         let artistlist = artist1?.components(separatedBy: "</a></li>")
@@ -119,11 +129,10 @@ class FavoritesView: UITableViewController, UIViewControllerPreviewingDelegate {
                                 }
                             }
                         }
-                        let pic = str?.components(separatedBy: ".html\"><img src=\"")[1].components(separatedBy: "\"></a></div>")[0]
-                        let picurl = "https:\(pic!)"
+                        let picurl = "https:\(pic)"
                         self.arr[a] = data!
                         var dic:[String:String] = [:]
-                        dic["title"] = Strings.decode(title2)
+                        dic["title"] = Strings.decode(title)
                         dic["artist"] = artist
                         dic["language"] = language
                         dic["series"] = series

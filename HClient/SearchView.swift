@@ -361,88 +361,81 @@ class SearchView: UITableViewController, UIViewControllerPreviewingDelegate, UIP
             if error == nil && (response as! HTTPURLResponse).statusCode == 200 {
                 let str = String(data: data!, encoding: .utf8)
                 let anime = str?.components(separatedBy: "<td>Type</td><td>")[1].components(separatedBy: "</a></td>")[0]
+                var title:String
+                var pic:String
                 if (anime?.contains("anime"))! {
-                    OperationQueue.main.addOperation {
-                        UIApplication.shared.isNetworkActivityIndicatorVisible = false
-                        let alert = UIAlertController(title: NSLocalizedString("This number is Anime.", comment: ""), message: NSLocalizedString("HClient does not support Anime.", comment: ""), preferredStyle: .alert)
-                        let action = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .default, handler: nil)
-                        alert.addAction(action)
-                        self.present(alert, animated: true, completion: nil)
-                        self.activityController.isHidden = true
-                        self.activityController.stopAnimating()
-                        overlay.removeFromSuperview()
-                    }
+                    title = (str?.components(separatedBy: "<h1>")[2].components(separatedBy: "</h1>")[0])!
+                    pic = (str?.components(separatedBy: "\"cover\"><img src=\"")[1].components(separatedBy: "\"></div>")[0])!
                 }
                 else {
-                    let title1 = str?.components(separatedBy: "</a></h1>")[0]
-                    let title2 = title1?.components(separatedBy: "<h1>")[3].components(separatedBy: ".html\">")[1]
-                    let artist1 = str?.components(separatedBy: "</h2>")[0].components(separatedBy: "<h2>")[1]
-                    var artist = NSLocalizedString("Artist: ", comment: "")
-                    let artistlist = artist1?.components(separatedBy: "</a></li>")
-                    if (artist1?.contains("N/A"))! {
-                        artist.append("N/A")
-                    }
-                    else {
-                        for i in 0...(artistlist?.count)!-2 {
-                            artist.append(Strings.decode(artistlist?[i].components(separatedBy: ".html\">")[1]))
-                            if i != (artistlist?.count)! - 2 {
-                                artist.append(", ")
-                            }
+                    title = (str?.components(separatedBy: "</a></h1>")[0].components(separatedBy: "<h1>")[3].components(separatedBy: ".html\">")[1])!
+                    pic = (str?.components(separatedBy: ".html\"><img src=\"")[1].components(separatedBy: "\"></a></div>")[0])!
+                }
+                let artist1 = str?.components(separatedBy: "</h2>")[0].components(separatedBy: "<h2>")[1]
+                var artist = NSLocalizedString("Artist: ", comment: "")
+                let artistlist = artist1?.components(separatedBy: "</a></li>")
+                if (artist1?.contains("N/A"))! {
+                    artist.append("N/A")
+                }
+                else {
+                    for i in 0...(artistlist?.count)!-2 {
+                        artist.append(Strings.decode(artistlist?[i].components(separatedBy: ".html\">")[1]))
+                        if i != (artistlist?.count)! - 2 {
+                            artist.append(", ")
                         }
                     }
-                    var language = NSLocalizedString("Language: ", comment: "")
-                    let lang = str?.components(separatedBy: "Language")[1].components(separatedBy: "</a></td>")[0]
-                    if (lang?.contains("N/A"))! {
-                        language.append("N/A")
-                    }
-                    else {
-                        language.append(Strings.decode(lang?.components(separatedBy: ".html\">")[1]))
-                    }
-                    var series = NSLocalizedString("Series: ", comment: "")
-                    let series1 = str?.components(separatedBy: "Series")[1].components(separatedBy: "</td>")[1]
-                    let series2 = series1?.components(separatedBy: "</a></li>")
-                    if (series1?.contains("N/A"))! {
-                        series.append("N/A")
-                    }
-                    else {
-                        for i in 0...(series2?.count)!-2 {
-                            series.append(Strings.decode(series2?[i].components(separatedBy: ".html\">")[1]))
-                            if i != (series2?.count)! - 2 {
-                                series.append(", ")
-                            }
+                }
+                var language = NSLocalizedString("Language: ", comment: "")
+                let lang = str?.components(separatedBy: "Language")[1].components(separatedBy: "</a></td>")[0]
+                if (lang?.contains("N/A"))! {
+                    language.append("N/A")
+                }
+                else {
+                    language.append(Strings.decode(lang?.components(separatedBy: ".html\">")[1]))
+                }
+                var series = NSLocalizedString("Series: ", comment: "")
+                let series1 = str?.components(separatedBy: "Series")[1].components(separatedBy: "</td>")[1]
+                let series2 = series1?.components(separatedBy: "</a></li>")
+                if (series1?.contains("N/A"))! {
+                    series.append("N/A")
+                }
+                else {
+                    for i in 0...(series2?.count)!-2 {
+                        series.append(Strings.decode(series2?[i].components(separatedBy: ".html\">")[1]))
+                        if i != (series2?.count)! - 2 {
+                            series.append(", ")
                         }
                     }
-                    var tags = NSLocalizedString("Tags: ", comment: "")
-                    let tags1 = str?.components(separatedBy: "Tags")[1].components(separatedBy: "</td>")[1]
-                    let tags2 = tags1?.components(separatedBy: "</a></li>")
-                    if tags2?.count == 1 {
-                        tags.append("N/A")
-                    }
-                    else {
-                        for i in 0...(tags2?.count)!-2 {
-                            tags.append(Strings.decode(tags2?[i].components(separatedBy: ".html\">")[1]))
-                            if i != (tags2?.count)! - 2 {
-                                tags.append(", ")
-                            }
+                }
+                var tags = NSLocalizedString("Tags: ", comment: "")
+                let tags1 = str?.components(separatedBy: "Tags")[1].components(separatedBy: "</td>")[1]
+                let tags2 = tags1?.components(separatedBy: "</a></li>")
+                if tags2?.count == 1 {
+                    tags.append("N/A")
+                }
+                else {
+                    for i in 0...(tags2?.count)!-2 {
+                        tags.append(Strings.decode(tags2?[i].components(separatedBy: ".html\">")[1]))
+                        if i != (tags2?.count)! - 2 {
+                            tags.append(", ")
                         }
                     }
-                    let pic = str?.components(separatedBy: ".html\"><img src=\"")[1].components(separatedBy: "\"></a></div>")[0]
-                    let picurl = "https:\(pic!)"
-                    self.numberDic["title"] = Strings.decode(title2)
-                    self.numberDic["artist"] = artist
-                    self.numberDic["language"] = language
-                    self.numberDic["series"] = series
-                    self.numberDic["tag"] = tags
-                    self.arr2.append(picurl)
-                    self.arr3.append(NSNull())
-                    DispatchQueue.main.async {
-                        UIApplication.shared.isNetworkActivityIndicatorVisible = false
-                        self.tableView.reloadData()
-                        self.activityController.isHidden = true
-                        self.activityController.stopAnimating()
-                        overlay.removeFromSuperview()
-                        self.pages = true
-                    }
+                }
+                let picurl = "https:\(pic)"
+                self.numberDic["title"] = Strings.decode(title)
+                self.numberDic["artist"] = artist
+                self.numberDic["language"] = language
+                self.numberDic["series"] = series
+                self.numberDic["tag"] = tags
+                self.arr2.append(picurl)
+                self.arr3.append(NSNull())
+                DispatchQueue.main.async {
+                    UIApplication.shared.isNetworkActivityIndicatorVisible = false
+                    self.tableView.reloadData()
+                    self.activityController.isHidden = true
+                    self.activityController.stopAnimating()
+                    overlay.removeFromSuperview()
+                    self.pages = true
                 }
             }
             else if error == nil && (response as! HTTPURLResponse).statusCode != 200 {

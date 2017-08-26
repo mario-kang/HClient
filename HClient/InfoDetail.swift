@@ -8,6 +8,8 @@
 
 import UIKit
 import SafariServices
+import AVKit
+import AVFoundation
 
 class InfoDetail: UIViewController {
     
@@ -27,6 +29,7 @@ class InfoDetail: UIViewController {
     var activityController:UIActivityIndicatorView?
     var URL1 = ""
     var ViewerURL = ""
+    var anime = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,11 +57,22 @@ class InfoDetail: UIViewController {
         let task = session.dataTask(with: request) { (data, response, error) in
             if error == nil && (response as! HTTPURLResponse).statusCode == 200 {
                 let str = String(data: data!, encoding: .utf8)
-                let title = str?.components(separatedBy: "</a></h1>")[0].components(separatedBy: "<h1>")[3].components(separatedBy: ".html\">")[1]
+                self.anime = (str?.components(separatedBy: "<td>Type</td><td>")[1].components(separatedBy: "</a></td>")[0])!
+                var title:String
+                var pic:String
+                if (self.anime.contains("anime")) {
+                    title = (str?.components(separatedBy: "<h1>")[2].components(separatedBy: "</h1>")[0])!
+                    pic = (str?.components(separatedBy: "\"cover\"><img src=\"")[1].components(separatedBy: "\"></div>")[0])!
+                    self.ViewerURL = (str?.components(separatedBy: "file: \"")[1].components(separatedBy: "\",")[0])!
+                }
+                else {
+                    title = (str?.components(separatedBy: "</a></h1>")[0].components(separatedBy: "<h1>")[3].components(separatedBy: ".html\">")[1])!
+                    self.ViewerURL = (str?.components(separatedBy: "<div class=\"cover\"><a href=\"")[1].components(separatedBy: "\"><img src=")[0])!
+                    pic = (str?.components(separatedBy: ".html\"><img src=\"")[1].components(separatedBy: "\"></a></div>")[0])!
+                }
                 let artist1 = str?.components(separatedBy: "</h2>")[0].components(separatedBy: "<h2>")[1]
                 var artist = NSLocalizedString("Artist: ", comment: "")
                 let artistlist = artist1?.components(separatedBy: "</a></li>")
-                self.ViewerURL = (str?.components(separatedBy: "<div class=\"cover\"><a href=\"")[1].components(separatedBy: "\"><img src=")[0])!
                 if (artist1?.contains("N/A"))! {
                     artist.append("N/A")
                 }
@@ -152,7 +166,6 @@ class InfoDetail: UIViewController {
                 format1.timeStyle = .medium
                 let dates3 = format1.string(from: dates2!)
                 dates.append(dates3)
-                let pic = (str?.components(separatedBy: ".html\"><img src=\"")[1].components(separatedBy: "\"></a></div>")[0])!
                 let picurl = "https:\(pic)"
                 let session1 = URLSession.shared
                 let request1 = URLRequest(url: URL(string:picurl)!, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 60.0)
@@ -256,13 +269,6 @@ class InfoDetail: UIViewController {
         self.present(sheet, animated: true, completion: nil)
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "Viewer" {
-            let segued:Viewer = segue.destination as! Viewer
-            segued.URL1 = ViewerURL
-        }
-    }
-    
     override var previewActionItems: [UIPreviewActionItem] {
         let share = UIPreviewAction(title: NSLocalizedString("Share URL", comment: ""), style: .default) { (_, _) in
             let url = URL(string: self.URL1)
@@ -277,13 +283,45 @@ class InfoDetail: UIViewController {
             }
             UIApplication.shared.delegate?.window??.rootViewController?.present(safari, animated: true, completion: nil)
         }
-        let openViewer = UIPreviewAction(title: NSLocalizedString("Open in Viewer", comment: ""), style: .default) { (_, _) in
+        var openViewer:UIPreviewAction
+        if (anime.contains("anime")) {
+            openViewer = UIPreviewAction(title: NSLocalizedString("Watch Anime", comment: ""), style: .default) { (_, _) in
+                let video = AVPlayerViewController()
+                let url = URL(string: "https:\(Strings.decode(self.ViewerURL))")
+                let player = AVPlayer(url: url!)
+                video.player = player
+                video.modalTransitionStyle = .coverVertical
+                UIApplication.shared.delegate?.window??.rootViewController?.present(video, animated: true, completion: nil)
+                player.play()
+            }
+        }
+        else {
+            openViewer = UIPreviewAction(title: NSLocalizedString("Open in Viewer", comment: ""), style: .default) { (_, _) in
+                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                let b:Viewer = storyboard.instantiateViewController(withIdentifier: "io.github.mario-kang.HClient.viewer") as! Viewer
+                b.URL1 = self.ViewerURL
+                UIApplication.shared.delegate?.window??.rootViewController?.showDetailViewController(b, sender: nil)
+            }
+        }
+        return [share,openSafari,openViewer]
+    }
+    
+    @IBAction func viewerAction(_ sender: Any) {
+        if (anime.contains("anime")) {
+            let video = AVPlayerViewController()
+            let url = URL(string: "https:\(Strings.decode(ViewerURL))")
+            let player = AVPlayer(url: url!)
+            video.player = player
+            video.modalTransitionStyle = .coverVertical
+            video.allowsPictureInPicturePlayback = false
+            self.splitViewController?.present(video, animated: true, completion: nil)
+            player.play()
+        }
+        else {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let b:Viewer = storyboard.instantiateViewController(withIdentifier: "io.github.mario-kang.HClient.viewer") as! Viewer
             b.URL1 = self.ViewerURL
             UIApplication.shared.delegate?.window??.rootViewController?.showDetailViewController(b, sender: nil)
         }
-        return [share,openSafari,openViewer]
     }
-
 }

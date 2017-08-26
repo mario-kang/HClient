@@ -53,10 +53,6 @@
 
 "Hitomi number %ld" = "Hitomi number %ld";
 
-"This number is Anime." = "This number is Anime.";
-
-"HClient does not support Anime." = "HClient does not support Anime.";
-
 "Share URL" = "Share URL";
 
 "Open in Viewer" = "Open in Viewer";
@@ -66,3 +62,5 @@
 "Select the language.\n\n\n\n\n\n\n\n" = "Select the language.\n\n\n\n\n\n\n\n";
 
 "All" = "All";
+
+"Watch Anime" = "Watch Anime";
