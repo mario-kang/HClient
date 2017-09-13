@@ -2,209 +2,209 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <array>
-	<dict>
-		<key>t</key>
+	<array>
+		
 		<string>albanian</string>
-		<key>s</key>
+		
 		<string>アルバニア語</string>
-	</dict>
-	<dict>
-		<key>t</key>
+	</array>
+	<array>
+		
 		<string>arabic</string>
-		<key>s</key>
+		
 		<string>アラビア語</string>
-	</dict>
-	<dict>
-		<key>t</key>
+	</array>
+	<array>
+		
 		<string>catalan</string>
-		<key>s</key>
+		
 		<string>カタルーニャ語</string>
-	</dict>
-	<dict>
-		<key>t</key>
+	</array>
+	<array>
+		
 		<string>chinese</string>
-		<key>s</key>
+		
 		<string>中国語</string>
-	</dict>
-	<dict>
-		<key>t</key>
+	</array>
+	<array>
+		
 		<string>czech</string>
-		<key>s</key>
+		
 		<string>チェコ語</string>
-	</dict>
-	<dict>
-		<key>t</key>
+	</array>
+	<array>
+		
 		<string>danish</string>
-		<key>s</key>
+		
 		<string>デンマーク語</string>
-	</dict>
-	<dict>
-		<key>t</key>
+	</array>
+	<array>
+		
 		<string>dutch</string>
-		<key>s</key>
+		
 		<string>オランダ語</string>
-	</dict>
-	<dict>
-		<key>t</key>
+	</array>
+	<array>
+		
 		<string>english</string>
-		<key>s</key>
+		
 		<string>英語</string>
-	</dict>
-	<dict>
-		<key>t</key>
+	</array>
+	<array>
+		
 		<string>esperanto</string>
-		<key>s</key>
+		
 		<string>エスペラント語</string>
-	</dict>
-	<dict>
-		<key>t</key>
+	</array>
+	<array>
+		
 		<string>estonian</string>
-		<key>s</key>
+		
 		<string>エストニア語</string>
-	</dict>
-	<dict>
-		<key>t</key>
+	</array>
+	<array>
+		
 		<string>finnish</string>
-		<key>s</key>
+		
 		<string>フィンランド語</string>
-	</dict>
-	<dict>
-		<key>t</key>
+	</array>
+	<array>
+		
 		<string>french</string>
-		<key>s</key>
+		
 		<string>フランス語</string>
-	</dict>
-	<dict>
-		<key>t</key>
+	</array>
+	<array>
+		
 		<string>german</string>
-		<key>s</key>
+		
 		<string>ドイツ語</string>
-	</dict>
-	<dict>
-		<key>t</key>
+	</array>
+	<array>
+		
 		<string>greek</string>
-		<key>s</key>
+		
 		<string>ギリシャ語</string>
-	</dict>
-	<dict>
-		<key>t</key>
+	</array>
+	<array>
+		
 		<string>hebrew</string>
-		<key>s</key>
+		
 		<string>ヘブライ語</string>
-	</dict>
-	<dict>
-		<key>t</key>
+	</array>
+	<array>
+		
 		<string>hungarian</string>
-		<key>s</key>
+		
 		<string>ハンガリー語</string>
-	</dict>
-	<dict>
-		<key>t</key>
+	</array>
+	<array>
+		
 		<string>indonesian</string>
-		<key>s</key>
+		
 		<string>インドネシア語</string>
-	</dict>
-	<dict>
-		<key>t</key>
+	</array>
+	<array>
+		
 		<string>italian</string>
-		<key>s</key>
+		
 		<string>イタリア語</string>
-	</dict>
-	<dict>
-		<key>t</key>
+	</array>
+	<array>
+		
 		<string>japanese</string>
-		<key>s</key>
+		
 		<string>日本語</string>
-	</dict>
-	<dict>
-		<key>t</key>
+	</array>
+	<array>
+		
 		<string>korean</string>
-		<key>s</key>
+		
 		<string>韓国語</string>
-	</dict>
-	<dict>
-		<key>t</key>
+	</array>
+	<array>
+		
 		<string>latin</string>
-		<key>s</key>
+		
 		<string>ラテン語</string>
-	</dict>
-	<dict>
-		<key>t</key>
+	</array>
+	<array>
+		
 		<string>norwegian</string>
-		<key>s</key>
+		
 		<string>ノルウェー語</string>
-	</dict>
-	<dict>
-		<key>t</key>
+	</array>
+	<array>
+		
 		<string>polish</string>
-		<key>s</key>
+		
 		<string>ポーランド語</string>
-	</dict>
-	<dict>
-		<key>t</key>
+	</array>
+	<array>
+		
 		<string>portuguese</string>
-		<key>s</key>
+		
 		<string>ポルトガル語</string>
-	</dict>
-	<dict>
-		<key>t</key>
+	</array>
+	<array>
+		
 		<string>romanian</string>
-		<key>s</key>
+		
 		<string>ルーマニア語</string>
-	</dict>
-	<dict>
-		<key>t</key>
+	</array>
+	<array>
+		
 		<string>russian</string>
-		<key>s</key>
+		
 		<string>ロシア語</string>
-	</dict>
-	<dict>
-		<key>t</key>
+	</array>
+	<array>
+		
 		<string>slovak</string>
-		<key>s</key>
+		
 		<string>スロバキア語</string>
-	</dict>
-	<dict>
-		<key>t</key>
+	</array>
+	<array>
+		
 		<string>spanish</string>
-		<key>s</key>
+		
 		<string>スペイン語</string>
-	</dict>
-	<dict>
-		<key>t</key>
+	</array>
+	<array>
+		
 		<string>swedish</string>
-		<key>s</key>
+		
 		<string>スウェーデン語</string>
-	</dict>
-	<dict>
-		<key>t</key>
+	</array>
+	<array>
+		
 		<string>tagalog</string>
-		<key>s</key>
+		
 		<string>タガログ語</string>
-	</dict>
-	<dict>
-		<key>t</key>
+	</array>
+	<array>
+		
 		<string>thai</string>
-		<key>s</key>
+		
 		<string>タイ語</string>
-	</dict>
-	<dict>
-		<key>t</key>
+	</array>
+	<array>
+		
 		<string>turkish</string>
-		<key>s</key>
+		
 		<string>トルコ語</string>
-	</dict>
-	<dict>
-		<key>t</key>
+	</array>
+	<array>
+		
 		<string>ukrainian</string>
-		<key>s</key>
+		
 		<string>ウクライナ語</string>
-	</dict>
-	<dict>
-		<key>t</key>
+	</array>
+	<array>
+		
 		<string>vietnamese</string>
-		<key>s</key>
+		
 		<string>ベトナム語</string>
-	</dict>
+	</array>
 </array>
 </plist>

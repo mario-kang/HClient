@@ -321,7 +321,7 @@ class InfoDetail: UIViewController {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let b:Viewer = storyboard.instantiateViewController(withIdentifier: "io.github.mario-kang.HClient.viewer") as! Viewer
             b.URL1 = self.ViewerURL
-            UIApplication.shared.delegate?.window??.rootViewController?.showDetailViewController(b, sender: nil)
+            self.navigationController?.pushViewController(b, animated: true)
         }
     }
 }

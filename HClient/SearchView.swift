@@ -18,7 +18,7 @@ class SearchCell: UITableViewCell {
     @IBOutlet weak var DJArtist: UILabel!
 }
 
-class SearchView: UITableViewController, UIViewControllerPreviewingDelegate, UIPickerViewDelegate {
+class SearchView: UITableViewController, UIViewControllerPreviewingDelegate, UIPickerViewDelegate, UIPickerViewDataSource {
     
     var activityController:UIActivityIndicatorView!
     var type = ""
@@ -243,11 +243,10 @@ class SearchView: UITableViewController, UIViewControllerPreviewingDelegate, UIP
         taga = taga.replacingOccurrences(of: " ", with: "%20")
         var url:URL
         if let path = Bundle.main.path(forResource: "Language", ofType: "plist") {
-            if let array = NSArray(contentsOfFile: path) as? [[String:String]] {
-                let sortDescriptor = NSSortDescriptor(key: "s", ascending: true)
-                var array2 = (array as! NSMutableArray).sortedArray(using: [sortDescriptor]) as! [[String:String]]
-                array2.insert(["t":"all"], at: 0)
-                let str:String! = array2[langindex]["t"]
+            if let array = NSArray(contentsOfFile: path) as? [[String]] {
+                var array2 = array.sorted {$0[1] < $1[1]}
+                array2.insert(["all","all"], at: 0)
+                let str:String! = array2[langindex][0]
                 if type == "male" || type == "female" {
                     url = URL(string: "https://hitomi.la/tag/\(type):\(taga)-\(str!)-\(ind).html")!
                 }
@@ -479,11 +478,10 @@ class SearchView: UITableViewController, UIViewControllerPreviewingDelegate, UIP
             var taga = tag
             taga = taga.replacingOccurrences(of: " ", with: "%20")
             if let path = Bundle.main.path(forResource: "Language", ofType: "plist") {
-                if let array = NSArray(contentsOfFile: path) as? [[String:String]] {
-                    let sortDescriptor = NSSortDescriptor(key: "s", ascending: true)
-                    var array2 = (array as! NSMutableArray).sortedArray(using: [sortDescriptor]) as! [[String:String]]
-                    array2.insert(["t":"all"], at: 0)
-                    let str:String! = array2[self.langIndex]["t"]
+                if let array = NSArray(contentsOfFile: path) as? [[String]] {
+                    var array2 = array.sorted {$0[1] < $1[1]}
+                    array2.insert(["all",NSLocalizedString("All", comment: "")], at: 0)
+                    let str:String! = array2[self.langIndex][0]
                     if type == "male" || type == "female" {
                         url = URL(string: "https://hitomi.la/tag/\(type):\(taga)-\(str!).html")!
                     }
@@ -607,14 +605,12 @@ class SearchView: UITableViewController, UIViewControllerPreviewingDelegate, UIP
                 }
                 let picker = UIPickerView(frame: frame)
                 picker.delegate = self
+                picker.dataSource = self
                 picker.selectRow(self.langIndex, inComponent: 0, animated: true)
                 langAlert.view.addSubview(picker)
                 let langOK = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .default, handler: { (_) in
                     if let path = Bundle.main.path(forResource: "Language", ofType: "plist") {
-                        if let array = NSArray(contentsOfFile: path) as? [[String:String]] {
-                            let sortDescriptor = NSSortDescriptor(key: "s", ascending: true)
-                            var array2 = (array as! NSMutableArray).sortedArray(using: [sortDescriptor]) as! [[String:String]]
-                            array2.insert(["t":"all"], at: 0)
+                        if (NSArray(contentsOfFile: path) as? [[String]]) != nil {
                             self.langIndex = picker.selectedRow(inComponent: 0)
                             self.arr = []
                             self.arr2 = []
@@ -641,9 +637,13 @@ class SearchView: UITableViewController, UIViewControllerPreviewingDelegate, UIP
         self.present(sheet, animated: true, completion: nil)
     }
     
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         if let path = Bundle.main.path(forResource: "Language", ofType: "plist") {
-            if let array = NSArray(contentsOfFile: path) as? [[String:String]] {
+            if let array = NSArray(contentsOfFile: path) as? [[String]] {
                 return array.count + 1
             }
             else {
@@ -657,11 +657,10 @@ class SearchView: UITableViewController, UIViewControllerPreviewingDelegate, UIP
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         if let path = Bundle.main.path(forResource: "Language", ofType: "plist") {
-            if let array = NSArray(contentsOfFile: path) as? [[String:String]] {
-                let sortDescriptor = NSSortDescriptor(key: "s", ascending: true)
-                var array2 = (array as! NSMutableArray).sortedArray(using: [sortDescriptor]) as! [[String:String]]
-                array2.insert(["s":NSLocalizedString("All", comment: "")], at: 0)
-                return array2[row]["s"]
+            if let array = NSArray(contentsOfFile: path) as? [[String]] {
+                var array2 = array.sorted {$0[1] < $1[1]}
+                array2.insert(["all",NSLocalizedString("All", comment: "")], at: 0)
+                return array2[row][1]
             }
             else {
                 return nil
