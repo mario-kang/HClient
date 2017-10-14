@@ -483,36 +483,36 @@ class SearchView: UITableViewController, UIViewControllerPreviewingDelegate, UIP
                     array2.insert(["all",NSLocalizedString("All", comment: "")], at: 0)
                     let str:String! = array2[self.langIndex][0]
                     if type == "male" || type == "female" {
-                        url = URL(string: "https://hitomi.la/tag/\(type):\(taga)-\(str!).html")!
+                        url = URL(string: "https://hitomi.la/tag/\(type):\(taga)-\(str!)-1.html")!
                     }
                     else if type == "language" {
-                        url = URL(string: "https://hitomi.la/index-\(taga).html")!
+                        url = URL(string: "https://hitomi.la/index-\(taga)-1.html")!
                     }
                     else {
-                        url = URL(string: "https://hitomi.la/\(type)/\(taga)-\(str!).html")!
+                        url = URL(string: "https://hitomi.la/\(type)/\(taga)-\(str!)-1.html")!
                     }
                 }
                 else {
                     if type == "male" || type == "female" {
-                        url = URL(string: "https://hitomi.la/tag/\(type):\(taga)-all.html")!
+                        url = URL(string: "https://hitomi.la/tag/\(type):\(taga)-all-1.html")!
                     }
                     else if type == "language" {
-                        url = URL(string: "https://hitomi.la/index-\(taga).html")!
+                        url = URL(string: "https://hitomi.la/index-\(taga)-1.html")!
                     }
                     else {
-                        url = URL(string: "https://hitomi.la/\(type)/\(taga)-all.html")!
+                        url = URL(string: "https://hitomi.la/\(type)/\(taga)-all-1.html")!
                     }
                 }
             }
             else {
                 if type == "male" || type == "female" {
-                    url = URL(string: "https://hitomi.la/tag/\(type):\(taga)-all.html")!
+                    url = URL(string: "https://hitomi.la/tag/\(type):\(taga)-all-1.html")!
                 }
                 else if type == "language" {
-                    url = URL(string: "https://hitomi.la/index-\(taga).html")!
+                    url = URL(string: "https://hitomi.la/index-\(taga)-1.html")!
                 }
                 else {
-                    url = URL(string: "https://hitomi.la/\(type)/\(taga)-all.html")!
+                    url = URL(string: "https://hitomi.la/\(type)/\(taga)-all-1.html")!
                 }
             }
 
