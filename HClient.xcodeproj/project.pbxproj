@@ -135,7 +135,7 @@
 		AC42DF581EEBA2C300C5F72B /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0900;
+				LastUpgradeCheck = 0910;
 				ORGANIZATIONNAME = "mario-kang";
 				TargetAttributes = {
 					AC42DF5F1EEBA2C300C5F72B = {
@@ -396,7 +396,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "io.github.mario-kang.HClient";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_INSTALL_OBJC_HEADER = NO;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
