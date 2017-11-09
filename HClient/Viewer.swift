@@ -15,18 +15,31 @@ class Viewer: UIViewController, WKNavigationDelegate {
     var URL1 = ""
     var web:WKWebView!
     var progress:UIProgressView!
+    var reloaded = true
+    var HTMLString = ""
+    var reloadButton: UIBarButtonItem!
+    var actionButton: UIBarButtonItem!
     
     override func loadView() {
         super.loadView()
         web = WKWebView()
+        actionButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(Action))
+        reloadButton = UIBarButtonItem(barButtonSystemItem: .stop, target: self, action: #selector(reloads))
+        self.navigationItem.setRightBarButtonItems([actionButton, reloadButton], animated: true)
         self.view = web
         web.navigationDelegate = self
         progress = UIProgressView(progressViewStyle: .bar)
         progress.translatesAutoresizingMaskIntoConstraints = false
         web.addSubview(progress)
+        if #available(iOS 11.0, *) {
+            let guide = view.safeAreaLayoutGuide
+            progress.topAnchor.constraint(equalTo: guide.topAnchor).isActive = true
+        }
+        else {
+            NSLayoutConstraint(item: progress, attribute: .top, relatedBy: .equal, toItem: self.topLayoutGuide, attribute: .bottom, multiplier: 1.0, constant: 0.0).isActive = true
+        }
         progress.leadingAnchor.constraint(equalTo: web.leadingAnchor).isActive = true
         progress.trailingAnchor.constraint(equalTo: web.trailingAnchor).isActive = true
-        progress.bottomAnchor.constraint(equalTo: web.bottomAnchor).isActive = true
     }
 
     override func viewDidLoad() {
@@ -39,17 +52,17 @@ class Viewer: UIViewController, WKNavigationDelegate {
         let task = session.dataTask(with: URL(string:viewerURL)!) { (data, _, error) in
             if error == nil {
                 let str = String(data:data!, encoding:.utf8)
-                var HTMLString = "<!DOCTYPE HTML><style>img{width:100%;}</style>"
+                self.HTMLString = "<!DOCTYPE HTML><style>img{width:100%;}</style>"
                 let list = str?.components(separatedBy: "<div class=\"img-url\">//")
                 for i in 0...(list?.count)!-2 {
                     let galleries:String = (list?[i+1].components(separatedBy: "</div>")[0])!
                     let num = galleries.components(separatedBy: "/galleries/")[1].components(separatedBy: "/")[0]
                     let numb = galleries.components(separatedBy: "/")[3]
                     let a = String(UnicodeScalar(97 + Int(num)! % 2)!)
-                    HTMLString.append("<img src=\"https://\(a)a.hitomi.la/galleries/\(num)/\(numb)\" >")
+                    self.HTMLString.append("<img src=\"https://\(a)a.hitomi.la/galleries/\(num)/\(numb)\" >")
                 }
                 DispatchQueue.main.async {
-                    self.web.loadHTMLString(HTMLString, baseURL: nil)
+                    self.web.loadHTMLString(self.HTMLString, baseURL: nil)
                     UIApplication.shared.isNetworkActivityIndicatorVisible = false
                 }
             }
@@ -83,11 +96,17 @@ class Viewer: UIViewController, WKNavigationDelegate {
     
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
+        reloadButton = UIBarButtonItem(barButtonSystemItem: .stop, target: self, action: #selector(reloads))
+        self.navigationItem.setRightBarButtonItems([actionButton, reloadButton], animated: true)
+        reloaded = true
         progress.isHidden = false
     }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         UIApplication.shared.isNetworkActivityIndicatorVisible = false
+        reloadButton = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(reloads))
+        self.navigationItem.setRightBarButtonItems([actionButton, reloadButton], animated: true)
+        reloaded = false
         progress.isHidden = true
     }
     
@@ -97,10 +116,13 @@ class Viewer: UIViewController, WKNavigationDelegate {
         let action = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .default, handler: nil)
         alert.addAction(action)
         self.present(alert, animated: true, completion: nil)
+        reloadButton = UIBarButtonItem(barButtonSystemItem: .stop, target: self, action: #selector(reloads))
+        reloaded = false
+        self.navigationItem.setRightBarButtonItems([actionButton, reloadButton], animated: true)
         progress.isHidden = true
     }
     
-    @IBAction func Action(_ sender: Any) {
+    @objc func Action() {
         let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let ViewerURL = "https://hitomi.la\(URL1)"
         let activity = UIAlertAction(title: NSLocalizedString("Share URL", comment: ""), style: .default) { (_) in
@@ -122,6 +144,23 @@ class Viewer: UIViewController, WKNavigationDelegate {
         sheet.addAction(cancel)
         sheet.popoverPresentationController?.barButtonItem = self.navigationItem.rightBarButtonItem
         self.present(sheet, animated: true, completion: nil)
+    }
+    
+    @objc func reloads() {
+        if reloaded {
+            web.stopLoading()
+            reloaded = false
+            reloadButton = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(reloads))
+            self.navigationItem.setRightBarButtonItems([actionButton, reloadButton], animated: true)
+            UIApplication.shared.isNetworkActivityIndicatorVisible = false
+            progress.isHidden = true
+        }
+        else {
+            self.web.loadHTMLString(self.HTMLString, baseURL: nil)
+            reloaded = true
+            reloadButton = UIBarButtonItem(barButtonSystemItem: .stop, target: self, action: #selector(reloads))
+            self.navigationItem.setRightBarButtonItems([actionButton, reloadButton], animated: true)
+        }
     }
     
 }

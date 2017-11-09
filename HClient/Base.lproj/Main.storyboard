@@ -773,13 +773,8 @@
                         <viewLayoutGuide key="safeArea" id="7Zh-WV-l45"/>
                     </view>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" id="Dm8-h0-dIj">
-                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="Cvr-W2-uPv">
-                            <connections>
-                                <action selector="Action:" destination="Cu9-qG-dsm" id="0pq-Y4-84S"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" id="Dm8-h0-dIj"/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hcN-Sj-fHh" userLabel="First Responder" sceneMemberID="firstResponder"/>
