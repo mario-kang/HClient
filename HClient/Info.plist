@@ -15,11 +15,16 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.10.0</string>
+	<string>2.0.0</string>
 	<key>CFBundleVersion</key>
-	<string>20</string>
+	<string>22</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>HClient uses Photo Library to save photos in the viewer.</string>
 	<key>UILaunchStoryboardName</key>

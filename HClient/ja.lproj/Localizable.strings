@@ -29,6 +29,14 @@
 
 "Remove from favorites" = "お気に入りから削除";
 
+"Add to favorites and download" = "お気に入りに追加してダウンロード";
+
+"Download" = "ダウンロード";
+
+"Remove from favorites and downloads" = "お気に入りおよびダウンロードから削除";
+
+"Remove downloads" = "ダウンロード削除";
+
 "Cancel" = "キャンセル";
 
 "New" = "最新の項目";
@@ -49,7 +57,7 @@
 
 "Could not find number %ld." = "Hitomiナンバー%ldを見つかることができませんでした。";
 
-"Hitomi number %ld" = "Hitomiナンバー%ld";
+"Hitomi number %d" = "Hitomiナンバー%d";
 
 "Share URL" = "URLをシェア";
 

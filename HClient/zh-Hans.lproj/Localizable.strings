@@ -29,6 +29,14 @@
 
 "Remove from favorites" = "从书签中删除";
 
+"Add to favorites and download" = "添加到书签并下载";
+
+"Download" = "下载";
+
+"Remove from favorites and downloads" = "从书签和下载中删除";
+
+"Remove downloads" = "删除下载";
+
 "Cancel" = "取消";
 
 "OK" = "确定";
@@ -51,7 +59,7 @@
 
 "Could not find number %ld." = "找不到Hitomi号码%ld。";
 
-"Hitomi number %ld" = "Hitomi号码%ld";
+"Hitomi number %d" = "Hitomi号码%d";
 
 "Share URL" = "共享URL";
 

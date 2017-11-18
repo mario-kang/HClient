@@ -32,6 +32,7 @@ class mainMenu: UITableViewController, UIViewControllerPreviewingDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         activityController = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 32, height: 32))
+        activityController?.autoresizingMask = [.flexibleBottomMargin, .flexibleTopMargin, .flexibleLeftMargin, .flexibleRightMargin]
         activityController.activityIndicatorViewStyle = .whiteLarge
         pages = false
         self.tableView.rowHeight = UITableViewAutomaticDimension
@@ -163,6 +164,7 @@ class mainMenu: UITableViewController, UIViewControllerPreviewingDelegate {
         overlay = UIView(frame: (self.splitViewController?.view.frame)!)
         overlay.backgroundColor = UIColor.black
         overlay.alpha = 0.8
+        overlay.autoresizingMask = (self.splitViewController?.view.autoresizingMask)!
         activityController.center = (self.splitViewController?.view.center)!
         self.splitViewController?.view.addSubview(overlay)
         overlay.addSubview(activityController)

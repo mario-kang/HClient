@@ -38,6 +38,7 @@ class SearchView: UITableViewController, UIViewControllerPreviewingDelegate, UIP
     override func viewDidLoad() {
         super.viewDidLoad()
         activityController = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 32, height: 32))
+        activityController?.autoresizingMask = [.flexibleBottomMargin, .flexibleTopMargin, .flexibleLeftMargin, .flexibleRightMargin]
         activityController.activityIndicatorViewStyle = .whiteLarge
         if !numbered {
             self.navigationItem.title = Strings.decode("\(type):\(tag)")

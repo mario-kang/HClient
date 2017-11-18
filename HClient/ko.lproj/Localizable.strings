@@ -29,6 +29,14 @@
 
 "Remove from favorites" = "즐겨찾기에서 제거";
 
+"Add to favorites and download" = "즐겨찾기에 추가 및 다운로드";
+
+"Download" = "다운로드";
+
+"Remove from favorites and downloads" = "즐겨찾기 및 다운로드 제거";
+
+"Remove downloads" = "다운로드 제거";
+
 "Cancel" = "취소";
 
 "OK" = "확인";
@@ -51,7 +59,7 @@
 
 "Could not find number %ld." = "히토미 넘버 %ld을(를) 찾을 수 없습니다.";
 
-"Hitomi number %ld" = "히토미 넘버 %ld";
+"Hitomi number %d" = "히토미 넘버 %d";
 
 "Share URL" = "URL 공유";
 

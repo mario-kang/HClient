@@ -19,6 +19,9 @@ class Viewer: UIViewController, WKNavigationDelegate {
     var HTMLString = ""
     var reloadButton: UIBarButtonItem!
     var actionButton: UIBarButtonItem!
+    var isLocal = false
+    var documentPath = ""
+    var number = ""
     
     override func loadView() {
         super.loadView()
@@ -47,36 +50,70 @@ class Viewer: UIViewController, WKNavigationDelegate {
         web.addObserver(self, forKeyPath: "estimatedProgress", options: .new, context: nil)
         self.view.addSubview(progress)
         let viewerURL = "https://hitomi.la\(URL1)"
-        UIApplication.shared.isNetworkActivityIndicatorVisible = true
-        let session = URLSession.shared
-        let task = session.dataTask(with: URL(string:viewerURL)!) { (data, _, error) in
-            if error == nil {
-                let str = String(data:data!, encoding:.utf8)
-                self.HTMLString = "<!DOCTYPE HTML><style>img{width:100%;}</style>"
-                let list = str?.components(separatedBy: "<div class=\"img-url\">//")
-                for i in 0...(list?.count)!-2 {
-                    let galleries:String = (list?[i+1].components(separatedBy: "</div>")[0])!
-                    let num = galleries.components(separatedBy: "/galleries/")[1].components(separatedBy: "/")[0]
-                    let numb = galleries.components(separatedBy: "/")[3]
-                    let a = String(UnicodeScalar(97 + Int(num)! % 2)!)
-                    self.HTMLString.append("<img src=\"https://\(a)a.hitomi.la/galleries/\(num)/\(numb)\" >")
+        let fileManage = FileManager()
+        let dirPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
+        documentPath = dirPath[0]
+        fileManage.changeCurrentDirectoryPath(documentPath)
+        number = URL1.components(separatedBy: "/")[2].components(separatedBy: ".html")[0]
+        if fileManage.changeCurrentDirectoryPath(number) {
+            isLocal = true
+            self.HTMLString = "<!DOCTYPE HTML><html><head><style>img{width:100%;}</style></head><body>"
+            do {
+                var picList = try fileManage.contentsOfDirectory(atPath: ".")
+                picList = picList.sorted {$0.localizedStandardCompare($1) == .orderedAscending}
+                var url = URL(string: "")
+                let patha = documentPath.appending("/\(number)")
+                let urlpath = URL(fileURLWithPath: patha)
+                for a in picList {
+                    if !a.hasSuffix(".html") {
+                        let path = documentPath.appending("/\(number)/\(a)")
+                        url = URL(fileURLWithPath: path)
+                        self.HTMLString.append("<img src=\"\(url!.absoluteString)\">")
+                    }
                 }
-                DispatchQueue.main.async {
-                    self.web.loadHTMLString(self.HTMLString, baseURL: nil)
-                    UIApplication.shared.isNetworkActivityIndicatorVisible = false
-                }
+                fileManage.changeCurrentDirectoryPath(number)
+                fileManage.createFile(atPath: "\(number).html", contents: self.HTMLString.data(using: .utf8), attributes: nil)
+                let html = documentPath.appending("/\(number)/\(number).html")
+                url = URL(fileURLWithPath: html)
+                self.HTMLString = self.HTMLString + "</body></html>"
+                self.web.loadFileURL(url!, allowingReadAccessTo: urlpath)
             }
-            else {
-                OperationQueue.main.addOperation {
-                    let alert = UIAlertController(title: NSLocalizedString("Error Occured.", comment: ""), message: error?.localizedDescription, preferredStyle: .alert)
-                    let action = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .default, handler: nil)
-                    alert.addAction(action)
-                    self.present(alert, animated: true, completion: nil)
-                    UIApplication.shared.isNetworkActivityIndicatorVisible = false
-                }
+            catch {
+                
             }
         }
-        task.resume()
+        else {
+            UIApplication.shared.isNetworkActivityIndicatorVisible = true
+            let session = URLSession.shared
+            let task = session.dataTask(with: URL(string:viewerURL)!) { (data, _, error) in
+                if error == nil {
+                    let str = String(data:data!, encoding:.utf8)
+                    self.HTMLString = "<!DOCTYPE HTML><style>img{width:100%;}</style>"
+                    let list = str?.components(separatedBy: "<div class=\"img-url\">//")
+                    for i in 0...(list?.count)!-2 {
+                        let galleries:String = (list?[i+1].components(separatedBy: "</div>")[0])!
+                        let num = galleries.components(separatedBy: "/galleries/")[1].components(separatedBy: "/")[0]
+                        let numb = galleries.components(separatedBy: "/")[3]
+                        let a = String(UnicodeScalar(97 + Int(num)! % 2)!)
+                        self.HTMLString.append("<img src=\"https://\(a)a.hitomi.la/galleries/\(num)/\(numb)\" >")
+                    }
+                    DispatchQueue.main.async {
+                        self.web.loadHTMLString(self.HTMLString, baseURL: nil)
+                        UIApplication.shared.isNetworkActivityIndicatorVisible = false
+                    }
+                }
+                else {
+                    OperationQueue.main.addOperation {
+                        let alert = UIAlertController(title: NSLocalizedString("Error Occured.", comment: ""), message: error?.localizedDescription, preferredStyle: .alert)
+                        let action = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .default, handler: nil)
+                        alert.addAction(action)
+                        self.present(alert, animated: true, completion: nil)
+                        UIApplication.shared.isNetworkActivityIndicatorVisible = false
+                    }
+                }
+            }
+            task.resume()
+        }
     }
     
     deinit {
@@ -156,10 +193,23 @@ class Viewer: UIViewController, WKNavigationDelegate {
             progress.isHidden = true
         }
         else {
-            self.web.loadHTMLString(self.HTMLString, baseURL: nil)
-            reloaded = true
-            reloadButton = UIBarButtonItem(barButtonSystemItem: .stop, target: self, action: #selector(reloads))
-            self.navigationItem.setRightBarButtonItems([actionButton, reloadButton], animated: true)
+            if isLocal {
+                let html = documentPath.appending("/\(number)/\(number).html")
+                let url = URL(fileURLWithPath: html)
+                self.HTMLString = self.HTMLString + "</body></html>"
+                let patha = documentPath.appending("/\(number)")
+                let urlpath = URL(fileURLWithPath: patha)
+                self.web.loadFileURL(url, allowingReadAccessTo: urlpath)
+                reloaded = true
+                reloadButton = UIBarButtonItem(barButtonSystemItem: .stop, target: self, action: #selector(reloads))
+                self.navigationItem.setRightBarButtonItems([actionButton, reloadButton], animated: true)
+            }
+            else {
+                self.web.loadHTMLString(self.HTMLString, baseURL: nil)
+                reloaded = true
+                reloadButton = UIBarButtonItem(barButtonSystemItem: .stop, target: self, action: #selector(reloads))
+                self.navigationItem.setRightBarButtonItems([actionButton, reloadButton], animated: true)
+            }
         }
     }
     

@@ -29,6 +29,14 @@
 
 "Remove from favorites" = "Remove from favorites";
 
+"Add to favorites and download" = "Add to favorites and download";
+
+"Download" = "Download";
+
+"Remove from favorites and downloads" = "Remove from favorites and downloads";
+
+"Remove downloads" = "Remove downloads";
+
 "Cancel" = "Cancel";
 
 "OK" = "OK";
@@ -51,7 +59,7 @@
 
 "Could not find number %ld." = "Could not find number %ld.";
 
-"Hitomi number %ld" = "Hitomi number %ld";
+"Hitomi number %d" = "Hitomi number %d";
 
 "Share URL" = "Share URL";
 

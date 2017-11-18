@@ -52,6 +52,7 @@ class SearchList: UITableViewController, UISearchBarDelegate,UIViewControllerPre
             self.view.addSubview(overlay)
         }
         activityController = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 32, height: 32))
+        activityController?.autoresizingMask = [.flexibleBottomMargin, .flexibleTopMargin, .flexibleLeftMargin, .flexibleRightMargin]
         activityController.center = overlay.center
         activityController.activityIndicatorViewStyle = .whiteLarge
         overlay.addSubview(activityController)
