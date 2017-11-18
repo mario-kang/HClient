@@ -67,32 +67,32 @@ class InfoDetail: UIViewController {
                 let fileString = String(data:data!, encoding:.utf8)
                 let components = fileString?.components(separatedBy: "\n")
                 let title = components![0]
-                var artist = components![1]
-                var groups = components![2]
-                var type = components![3]
-                var lang = components![4]
-                var series = components![5]
-                var tags = components![6]
-                var characters = components![7]
+                let artist = components![1]
+                let groups = components![2]
+                let type = components![3]
+                let lang = components![4]
+                let series = components![5]
+                let tags = components![6]
+                let characters = components![7]
                 let dates1 = components![8]
                 self.ViewerURL = components![9]
                 self.URL1 = components![10]
                 self.Title1.text = Strings.decode(title)
                 self.navigationItem.title = Strings.decode(title)
-                artist = NSLocalizedString("Artist: ", comment: "") + artist
-                self.Artist.text = artist
-                groups = NSLocalizedString("Groups: ", comment: "") + groups
-                self.Group.text = groups
-                series = NSLocalizedString("Series: ", comment: "") + series
-                self.Series.text = series
-                type = NSLocalizedString("Type: ", comment: "") + type
-                self.Type1.text = type
-                lang = NSLocalizedString("Language: ", comment: "") + lang
-                self.Language.text = lang
-                tags = NSLocalizedString("Tags: ", comment: "") + tags
-                self.Tag.text = tags
-                characters = NSLocalizedString("Character: ", comment: "") + characters
-                self.Character.text = characters
+                let artista = NSLocalizedString("Artist: ", comment: "") + artist
+                self.Artist.text = artista
+                let groupsa = NSLocalizedString("Groups: ", comment: "") + groups
+                self.Group.text = groupsa
+                let seriesa = NSLocalizedString("Series: ", comment: "") + series
+                self.Series.text = seriesa
+                let typea = NSLocalizedString("Type: ", comment: "") + type
+                self.Type1.text = typea
+                let langa = NSLocalizedString("Language: ", comment: "") + lang
+                self.Language.text = langa
+                let tagsa = NSLocalizedString("Tags: ", comment: "") + tags
+                self.Tag.text = tagsa
+                let charactersa = NSLocalizedString("Character: ", comment: "") + characters
+                self.Character.text = charactersa
                 var dates = NSLocalizedString("Date: ", comment: "")
                 let format = DateFormatter()
                 format.dateFormat = "yyyy-MM-dd HH:mm:ssZZ"
@@ -107,10 +107,20 @@ class InfoDetail: UIViewController {
                 let pics = UIImage(data: pic!)
                 self.Image.contentMode = .scaleAspectFit
                 self.Image.image = pics
-                self.explain = "\(Strings.decode(title))\n\(artist)\n\(groups)\n\(type)\n\(lang)\n\(series)\n\(tags)\n\(characters)\n\(dates)\n\(self.ViewerURL)\n\(self.URL1)"
+                self.explain = "\(Strings.decode(title))\n\(artist)\n\(groups)\n\(type)\n\(lang)\n\(series)\n\(tags)\n\(characters)\n\(dates1)\n\(self.ViewerURL)\n\(self.URL1)"
                 self.titlePic = pic
             }
             else {
+                if self.splitViewController != nil {
+                    overlay = UIView(frame: (self.splitViewController?.view.frame)!)
+                    overlay.autoresizingMask = (self.splitViewController?.view.autoresizingMask)!
+                }
+                else {
+                    overlay = UIView(frame: self.view.frame)
+                    overlay.autoresizingMask = self.view.autoresizingMask
+                }
+                overlay.backgroundColor = UIColor.black
+                overlay.alpha = 0.8
                 self.splitViewController?.view.addSubview(overlay)
                 overlay.addSubview(activityController!)
                 activityController?.isHidden = false
@@ -361,11 +371,21 @@ class InfoDetail: UIViewController {
                     favorites.synchronize()
                     do {
                         OperationQueue.main.addOperation {
+                            if self.splitViewController != nil {
+                                self.overlay = UIView(frame: (self.splitViewController?.view.frame)!)
+                                self.overlay.autoresizingMask = (self.splitViewController?.view.autoresizingMask)!
+                            }
+                            else {
+                                self.overlay = UIView(frame: self.view.frame)
+                                self.overlay.autoresizingMask = self.view.autoresizingMask
+                            }
+                            self.overlay.backgroundColor = UIColor.black
+                            self.overlay.alpha = 0.8
                             self.splitViewController?.view.addSubview(self.overlay)
                             let rect = CGRect(x: 0, y: 72.0, width: 200.0, height:2.0)
                             self.progressView = UIProgressView(frame: rect)
                             self.progressView.autoresizingMask = [.flexibleBottomMargin, .flexibleTopMargin, .flexibleLeftMargin, .flexibleRightMargin]
-                            self.progressView.center = self.view.center
+                            self.progressView.center = (self.splitViewController?.view.center)!
                             self.progressView.progress = 0.0
                             self.progressView.tintColor = UIColor.blue
                             self.overlay.addSubview(self.progressView)
@@ -466,6 +486,16 @@ class InfoDetail: UIViewController {
                     bookmark1 = UIAlertAction(title: NSLocalizedString("Download", comment: ""), style: .default, handler: { (_) in
                         OperationQueue.main.addOperation {
                             self.splitViewController?.view.addSubview(self.overlay)
+                            if self.splitViewController != nil {
+                                self.overlay = UIView(frame: (self.splitViewController?.view.frame)!)
+                                self.overlay.autoresizingMask = (self.splitViewController?.view.autoresizingMask)!
+                            }
+                            else {
+                                self.overlay = UIView(frame: self.view.frame)
+                                self.overlay.autoresizingMask = self.view.autoresizingMask
+                            }
+                            self.overlay.backgroundColor = UIColor.black
+                            self.overlay.alpha = 0.8
                             let rect = CGRect(x: 0, y: 72.0, width: 200.0, height:2.0)
                             self.progressView = UIProgressView(frame: rect)
                             self.progressView.autoresizingMask = [.flexibleBottomMargin, .flexibleTopMargin, .flexibleLeftMargin, .flexibleRightMargin]
